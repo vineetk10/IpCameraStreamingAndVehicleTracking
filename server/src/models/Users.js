@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema({
     cameras : [
         {
             ip: String,
+            name: String,
             date: Date,
             session: String,
             connection: String,

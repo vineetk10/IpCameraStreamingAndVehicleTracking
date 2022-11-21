@@ -20,7 +20,37 @@ exports.registerUser = ( req, res ) => {
     });
     // res.json(user);
 
+}
+
+
+exports.registerCamera = async ( req, res ) => {
+    // console.log("Inside resgiter user");
+
+
+    try {
+        
+        await UserModel.updateOne({emailId: req.params.emailId}, {
+            $push : {
+                cameras :  {
+                    $each : req.body
+                }
+            }
+        }) 
+        res.send(JSON.stringify({Response: "added successfully"}));
+        
+
+    } catch (error) {
+        res
+             .status(500)
+             .send(JSON.stringify({ message: "Something went wrong!", err }));
+ 
     }
+ 
+}
+
+
+
+
 
 
 exports.find = async (req, res) => {

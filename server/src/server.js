@@ -77,6 +77,36 @@ app.post("/api/sessions/:sessionId/connections", async (req, res) => {
 });
 
 
+// how to create session to publish IP cameras
+// 1st need to create a session object using app.post("/api/sessions", async (req, res)
+// then using that sessionId need to register the IP camera URI
+
+
+var connectionProperties = {
+  type: "IPCAM",
+  rtspUri: "rtsp://your.camera.ip:7777/path",
+  adaptativeBitrate: true,
+  onlyPlayWithSubscribers: false,
+  networkCache: 1000
+};
+
+
+
+// this API should return the stream created for that IP camera,
+// that can be accessed on the UI using Subscribe from other user's stream - https://docs.openvidu.io/en/stable/cheatsheet/subscribe-unsubscribe/
+
+app.post("/api/sessions/:sessionId/ipcamera", async (req, res) => {
+  var session = openvidu.activeSessions.find(
+    (s) => s.sessionId === req.params.sessionId
+  );
+  if (!session) {
+    res.status(404).send();
+  } else {
+    var connection = await session.createConnection(connectionProperties);
+    res.send(connection);
+  }
+});
+
 
 
 
