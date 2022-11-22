@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button';
 
-function QueryLicensePlate() {
+function QueryLicensePlateButton() {
   return (
     <div>
        <Button variant="primary" size="lg">
@@ -11,4 +11,4 @@ function QueryLicensePlate() {
   )
 }
 
-export default QueryLicensePlate
+export default QueryLicensePlateButton
