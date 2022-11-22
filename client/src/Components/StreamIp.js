@@ -1,8 +1,11 @@
 import React from 'react'
+import StreamingCameraOptions from './StreamingCameraOptions'
 
 function StreamIp() {
   return (
-    <div>StreamIp</div>
+    <div>
+        <StreamingCameraOptions/>
+    </div>
   )
 }
 
