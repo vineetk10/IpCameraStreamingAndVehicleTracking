@@ -1,0 +1,16 @@
+.options{
+    background-color:white;
+    height: 90%;
+}
+
+.options-container{
+    padding-top: 5rem;
+}
+
+.options-container-license-plate{
+    padding-top: 10rem;
+}
+
+.options-container-license-stream{
+    padding-top: 10rem;
+}
