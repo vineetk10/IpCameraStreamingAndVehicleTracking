@@ -1,0 +1,64 @@
+// User Endpoints
+###
+POST http://localhost:5000/users/register
+content-type: application/json
+
+{
+    "name": "Vivek Joshi",
+    "emailId": "vivek.joshi17@sjsu.edu",
+    "password": "password"
+}
+
+
+###
+GET http://localhost:5000/users/vivek.joshi17@sjsu.edu
+# content-type: application/json
+
+# {
+   
+#     "emailId": "vivek.joshi2@sjsu.edu"
+# }
+
+
+###
+POST  http://localhost:5000/users/login
+content-type: application/json
+
+{
+   
+    "emailId": "vivek.joshi17@sjsu.edu",
+    "password": "password"
+}
+
+
+###
+POST http://localhost:5000/users/registerCamera/vivek.joshi17@sjsu.edu
+content-type: application/json
+
+{
+    "ip" : "rtsp://testing2",
+    "name": "Vivek Joshi",
+    "session" : "sessiontesting2",
+    "connection": "connectiontesting2",
+    "token": "tokentesting2"
+}
+
+
+###
+DELETE  http://localhost:5000/users/deleteCamera/vivek.joshi17@sjsu.edu/63e090343aba378267b43e66
+
+
+
+
+###
+PUT   http://localhost:5000/users/updateCamera/vivek.joshi17@sjsu.edu
+content-type: application/json
+
+{
+    "_id" : "63e0905b3aba378267b43e68",
+    "ip" : "rtsp://testing3",
+    "name": "Vivek Joshi3"
+}
+
+###
+GET   http://localhost:5000/users/liveFeed/vivek.joshi17@sjsu.edu

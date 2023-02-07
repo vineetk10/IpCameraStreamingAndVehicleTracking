@@ -60,6 +60,7 @@ var openvidu = new OpenVidu(
 );
 
 app.post("/api/sessions", async (req, res) => {
+  console.log('LINE 63')
   var session = await openvidu.createSession(req.body);
   res.send(session.sessionId);
 });
@@ -69,8 +70,10 @@ app.post("/api/sessions/:sessionId/connections", async (req, res) => {
     (s) => s.sessionId === req.params.sessionId
   );
   if (!session) {
+    console.log('LINE 72')
     res.status(404).send();
   } else {
+    console.log('LINE 75')
     var connection = await session.createConnection(req.body);
     res.send(connection.token);
   }

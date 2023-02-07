@@ -31,9 +31,9 @@ exports.registerCamera = async ( req, res ) => {
         
         await UserModel.updateOne({emailId: req.params.emailId}, {
             $push : {
-                cameras :  {
-                    $each : req.body
-                }
+                cameras :  
+                     req.body
+                
             }
         }) 
         res.send(JSON.stringify({Response: "added successfully"}));
@@ -42,7 +42,7 @@ exports.registerCamera = async ( req, res ) => {
     } catch (error) {
         res
              .status(500)
-             .send(JSON.stringify({ message: "Something went wrong!", err }));
+             .send(JSON.stringify({ message: "Something went wrong!", error }));
  
     }
  
@@ -111,4 +111,78 @@ exports.login = async (req, res) => {
     catch(err){
         console.log("Inside userController find");
     }
+}
+
+
+
+
+exports.deleteCamera = async ( req, res ) => {
+    // console.log("Inside resgiter user");
+
+
+    try {
+        
+        await UserModel.updateOne({emailId: req.params.emailId}, {
+            $pull : {
+                cameras:{
+                    _id : req.params.cameraId
+                }                  
+            }
+        }) 
+        res.send(JSON.stringify({Response: "Camera Deleted successfully"}));
+        
+
+    } catch (error) {
+        res
+             .status(500)
+             .send(JSON.stringify({ message: "Something went wrong!", error }));
+ 
+    }
+ 
+}
+
+
+exports.updateCamera = async ( req, res ) => {
+    // console.log("Inside resgiter user");
+
+
+    try {
+        
+        await UserModel.updateOne({emailId: req.params.emailId, "cameras._id" : req.body._id}, {
+            $set : {
+                "cameras.$.name": req.body.name,
+                "cameras.$.ip" : req.body.ip
+            }
+        }) 
+        res.send(JSON.stringify({Response: "Camera Updated successfully"}));
+        
+
+    } catch (error) {
+        res
+             .status(500)
+             .send(JSON.stringify({ message: "Something went wrong!", error }));
+ 
+    }
+ 
+}
+
+
+exports.liveFeed = async ( req, res ) => {
+    // console.log("Inside resgiter user");
+
+
+    try {
+        
+        const cameras = await UserModel.findOne({emailId: req.params.emailId}, {
+            cameras : 1
+        }) 
+        res.status(200).send(cameras)        
+
+    } catch (error) {
+        res
+             .status(500)
+             .send(JSON.stringify({ message: "Something went wrong!", error }));
+ 
+    }
+ 
 }
