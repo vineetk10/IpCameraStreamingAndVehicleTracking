@@ -3,5 +3,6 @@
     height: 10%;
     color:brown;
     font-size: 3rem;
-    
+    display: flex;
+    justify-content: center;
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Multiselect from 'multiselect-react-dropdown';
 
 function StreamingCameraOptions() {
-    const [ipcameras, setIpCameras] = useState([{name: 'Camera 1️⃣', id: 1},{name: 'Camera 2️⃣', id: 2}]);
+    const [ipcameras, setIpCameras] = useState([{id: 1, name: 'Camera 1️⃣', ip:''},{id: 2, name: 'Camera 2️⃣', ip:''}]);
     const [selectedIpCameras, setSelectedIpCameras] = useState([]);
 
     const onSelect = (selectedList, selectedItem)=>{
