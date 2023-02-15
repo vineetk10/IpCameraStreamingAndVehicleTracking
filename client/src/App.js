@@ -5,6 +5,8 @@ import Home from './Components/Home';
 import StreamIp from './Components/StreamIp';
 import Login from './Components/Login';
 import Signup from './Components/Signup';
+import AddIPCamera from './Components/AddIPCamera';
+import OpenViduReact from './Components/OpenViduReact';
 function App() {
   return (
     <div className="App">
@@ -22,6 +24,12 @@ function App() {
           </Route>
           <Route exact path="/signup">
               <Signup/>
+          </Route>
+          <Route exact path="/addCamera">
+              <AddIPCamera/>
+          </Route>
+          <Route exact path="/streamOpenVidu">
+              <OpenViduReact/>
           </Route>
         </Switch>
       </Router>

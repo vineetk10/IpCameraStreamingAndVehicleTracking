@@ -29,7 +29,7 @@ exports.registerCamera = async ( req, res ) => {
 
     try {
         
-        await UserModel.updateOne({emailId: req.params.emailId}, {
+        await UserModel.updateOne({_id: req.params.id}, {
             $push : {
                 cameras :  
                      req.body

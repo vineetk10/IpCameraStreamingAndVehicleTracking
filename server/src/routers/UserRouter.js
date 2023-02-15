@@ -6,7 +6,7 @@ var router = express.Router();
 router.post("/register", userController.registerUser);
 
 // Working fine.
-router.post("/registerCamera/:emailId", userController.registerCamera);
+router.post("/registerCamera/:id", userController.registerCamera);
 
 
 // Working fine.
