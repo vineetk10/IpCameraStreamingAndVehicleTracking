@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link,useHistory } from "react-router-dom";
 import { addCamera } from "../camera/cameraapicalls";
+import DisplayUserCameras from "./DisplayUserCameras";
 // import Navbar from "../Components/Navbar";
 
 const AddIPCamera = () => {
@@ -77,6 +78,7 @@ const AddIPCamera = () => {
           </form>
         </div>
       </div>
+      <DisplayUserCameras/>
       </>
       
     );
