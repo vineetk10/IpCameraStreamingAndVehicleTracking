@@ -50,7 +50,7 @@ const Login = () => {
   const onSubmit = event =>{
       event.preventDefault();
     setValues({...values,error:false,loading:true})
-    signin({email,password})
+    signin({emailId:email,password})
     .then(data =>{
       if(data.error){
         setValues({...values,error:data.error,loading:false})
