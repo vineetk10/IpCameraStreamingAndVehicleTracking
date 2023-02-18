@@ -17,40 +17,100 @@ function StreamIp() {
   };
 
   // global states
-  const pc = new RTCPeerConnection(servers);
-  let localStream = null; 
-  let remoteStream = null  
-    const handleWebCamClick = async()=>{
-      localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
+  // const pc = new RTCPeerConnection(servers);
+  // let localStream = null; 
+  // let remoteStream = null  
+    const handleWebCamClick = ()=>{
+     // Get the media stream from the user's device
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    .then(function(stream) {
+      // Create a new RTCPeerConnection
+      var pc = new RTCPeerConnection();
+      
+      // Add the media stream to the peer connection
+      stream.getTracks().forEach(function(track) {
+        pc.addTrack(track, stream);
+      });
+      
+      // Set up the data channel for sending data
+      var dataChannel = pc.createDataChannel('media-stream');
+      dataChannel.onopen = function() {
+        console.log('Data channel open');
+      };
+      
+      // Set up the signaling connection
+      var signalingConnection = new WebSocket('ws://localhost:8080');
+      signalingConnection.onopen = function() {
+        console.log('Signaling connection open');
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+        // Send an offer to the other peer
+        pc.createOffer()
+          .then(function(offer) {
+            return pc.setLocalDescription(offer);
+          })
+          .then(function() {
+            signalingConnection.send(JSON.stringify({
+              type: 'offer',
+              sdp: pc.localDescription.sdp
+            }));
+          });
+      };
+      
+      // Handle incoming messages from the signaling server
+      signalingConnection.onmessage = function(event) {
+        var message = JSON.parse(event.data);
+        if (message.type === 'answer') {
+          // Set the remote description based on the answer from the other peer
+          pc.setRemoteDescription(new RTCSessionDescription({
+            type: 'answer',
+            sdp: message.sdp
+          }));
+        } else if (message.type === 'candidate') {
+          // Add the ICE candidate received from the other peer
+          pc.addIceCandidate(new RTCIceCandidate(message.candidate));
+        } else if (message.type === 'media-stream') {
+          // Handle incoming media stream from other peer
+          var remoteStream = new MediaStream();
+          message.tracks.forEach(function(track) {
+            var remoteTrack = remoteStream.addTrack(new MediaStreamTrack(track), remoteStream);
+          });
+          // Attach remote stream to a video element
+          var remoteVideo = document.getElementById('remote-video');
+          remoteVideo.srcObject = remoteStream;
+        }
+      };
+      
+      // Send ICE candidates to the other peer
+      pc.onicecandidate = function(event) {
+        if (event.candidate) {
+          signalingConnection.send(JSON.stringify({
+            type: 'candidate',
+            candidate: event.candidate
+          }));
+        }
+      };
+      
+      // Listen for incoming media streams from the other peer
+      pc.ontrack = function(event) {
+        // Send the incoming media stream to the other peer
+        signalingConnection.send(JSON.stringify({
+          type: 'media-stream',
+          tracks: event.streams[0].getTracks().map(function(track) {
+            return track.clone().toJSON();
+          })
+        }));
+        // Attach local stream to a video element
+        // var localVideo = document.getElementById('local-video');
+        // localVideo.srcObject = stream;
+       
+      };
     })
+    .catch(function(error) {
+      console.error(error);
+    });
 
-    // initalizing the remote server to the mediastream
-    remoteStream = new MediaStream();
-
-
-    // Pushing tracks from local stream to peerConnection
-    localStream.getTracks().forEach(track => {
-        pc.addTrack(track, localStream);
-    })
-
-    pc.ontrack = event => {
-        event.streams[0].getTracks(track => {
-            remoteStream.addTrack(track)
-        })
-    }  
-
-    // displaying the video data from the stream to the webpage
-    videoRef.current.srcObject = localStream;
-    videoRef.current.play();
-    // remoteVideo.srcObject = remoteStream;
-
-    // enabling and disabling interface based on the current condtion
-    // callButton.disabled = false;
-    // answerButton.disabled = false;
-    // webcamButton.disabled = true;
-      // document.getElementById('webcamVideo').srcObject = localStream;
+  
     }
   return (
     <div>

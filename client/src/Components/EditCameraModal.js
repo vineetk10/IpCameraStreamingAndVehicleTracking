@@ -19,7 +19,7 @@ function EditCameraModal({show, cameraId,cameraIp, cameraName, handleClose}) {
       const onSubmit = event => {
         event.preventDefault();
         setValues({ ...values, error: false });
-        return fetch(`${API}/users/updateCamera/${JSON.parse(localStorage.getItem("jwt"))._id}`, {
+        return fetch(`${API}/users/updateCamera/${JSON.parse(localStorage.getItem("jwt")).emailId}`, {
             method: "PUT",
             headers: {
               Accept: "application/json",
