@@ -45,7 +45,7 @@ const WebSocket = require('ws');
 
 // Create a WebSocket server
 const server = new WebSocket.Server({ port: 8080 });
-
+console.log('Server', server);
 // Store a reference to the active WebSocket connection
 let connection;
 
