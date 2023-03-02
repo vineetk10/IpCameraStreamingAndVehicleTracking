@@ -1,76 +1,83 @@
-// const express = require('express')
-// const app = express()
-// // const cors = require('cors')
-// // app.use(cors())
-// const server = require('http').Server(app)
-// const io = require('socket.io')(server)
-// const { ExpressPeerServer } = require('peer');
-// const peerServer = ExpressPeerServer(server, {
-//   debug: true
-// });
-// const { v4: uuidV4 } = require('uuid')
+let express = require('express');
+let http = require('http');
+let app = express();
+let cors = require('cors');
+let server = http.createServer(app);
+let socketio = require('socket.io');
+let io = socketio.listen(server);
 
-// app.use('/peerjs', peerServer);
+app.use(cors());
+const PORT = process.env.PORT || 8080;
 
-// app.set('view engine', 'ejs')
-// app.use(express.static('public'))
+let users = {};
 
-// app.get('/', (req, res) => {
-//   res.redirect(`/${uuidV4()}`)
-// })
+let socketToRoom = {};
+let isFirstUser = true;
+let sender = "";
+const maximum = process.env.MAXIMUM || 4;
 
-// app.get('/:room', (req, res) => {
-//   res.render('room', { roomId: req.params.room })
-// })
+io.on('connection', socket => {
+    socket.on('join_room', data => {
+        if (users[data.room]) {
+            const length = users[data.room].length;
+            if (length === maximum) {
+                socket.to(socket.id).emit('room_full');
+                return;
+            }
+            users[data.room].push({id: socket.id, email: data.email});
+        } else {
+            users[data.room] = [{id: socket.id, email: data.email}];
+        }
 
-// io.on('connection', socket => {
-//   socket.on('join-room', (roomId, userId) => {
-//     console.log(roomId);
-//     socket.join(roomId)
-//     socket.to(roomId).broadcast.emit('user-connected', userId);
-//     // messages
-//     socket.on('message', (message) => {
-//       //send message to the same room
-//       io.to(roomId).emit('createMessage', message)
-//   }); 
+        if(isFirstUser)
+        {
+            sender = socket.id
+            isFirstUser = false;
+        }
+        socketToRoom[socket.id] = data.room;
 
-//     socket.on('disconnect', () => {
-//       socket.to(roomId).broadcast.emit('user-disconnected', userId)
-//     })
-//   })
-// })
+        socket.join(data.room);
+        console.log(`[${socketToRoom[socket.id]}]: ${socket.id} enter`);
 
-// server.listen(process.env.PORT||3030)
-const WebSocket = require('ws');
+        const usersInThisRoom = users[data.room].filter(user => user.id !== socket.id);
 
-// Create a WebSocket server
-const server = new WebSocket.Server({ port: 8080 });
-console.log('Server', server);
-// Store a reference to the active WebSocket connection
-let connection;
+        console.log(usersInThisRoom);
 
-// Handle incoming WebSocket connections
-server.on('connection', function(ws) {
-  console.log('WebSocket connection established');
+        io.sockets.to(socket.id).emit('all_users', usersInThisRoom, sender);
+    });
 
-  // Store the WebSocket connection
-  connection = ws;
+    socket.on('offer', data => {
+        //console.log(data.sdp);
+        socket.to(data.offerReceiveID).emit('getOffer', {sdp: data.sdp, offerSendID: data.offerSendID, offerSendEmail: data.offerSendEmail});
+    });
 
-  // Handle incoming messages
-  ws.on('message', function(message) {
-    console.log('Received message:', message);
+    socket.on('answer', data => {
+        //console.log(data.sdp);
+        socket.to(data.answerReceiveID).emit('getAnswer', {sdp: data.sdp, answerSendID: data.answerSendID});
+    });
 
-    // Forward the message to the other peer
-    if (connection && connection !== ws) {
-      connection.send(message);
-    }
-  });
+    socket.on('candidate', data => {
+        //console.log(data.candidate);
+        socket.to(data.candidateReceiveID).emit('getCandidate', {candidate: data.candidate, candidateSendID: data.candidateSendID});
+    })
 
-  // Handle the WebSocket connection closing
-  ws.on('close', function() {
-    console.log('WebSocket connection closed');
-    connection = null;
-  });
+    socket.on('disconnect', () => {
+        console.log(`[${socketToRoom[socket.id]}]: ${socket.id} exit`);
+        const roomID = socketToRoom[socket.id];
+        let room = users[roomID];
+        if (room) {
+            room = room.filter(user => user.id !== socket.id);
+            users[roomID] = room;
+            if (room.length === 0) {
+                delete users[roomID];
+                return;
+            }
+        }
+        socket.to(roomID).emit('user_exit', {id: socket.id});
+        console.log(users);
+    })
 });
 
-console.log('Signaling server listening on port 8080');
+server.listen(PORT, () => {
+    console.log(`server running on ${PORT}`);
+});

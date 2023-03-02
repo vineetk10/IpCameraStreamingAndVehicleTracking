@@ -7,6 +7,7 @@ import Login from './Components/Login';
 import Signup from './Components/Signup';
 import AddIPCamera from './Components/AddIPCamera';
 import OpenViduReact from './Components/OpenViduReact';
+import React from 'react';
 function App() {
   return (
     <div className="App">

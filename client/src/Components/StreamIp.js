@@ -1,136 +1,223 @@
-import React,{useRef} from 'react'
-import StreamingCameraOptions from './StreamingCameraOptions'
-// import firebase from 'firebase/app'
-import Button from 'react-bootstrap/Button';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import io from 'socket.io-client';
+// import Video from './Components/Video';
+import Video from './Video';
+import { WebRTCUser } from './types';
 
-function StreamIp() {
-    // const firestore = firebase.firestore();
-    // server config
-  const videoRef = useRef(null);
-  const servers = {
-    iceServers: [
-      {
-        urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'], // free stun server
-      },
-    ],
-    iceCandidatePoolSize: 10,
-  };
+const pc_config = {
+  iceServers: [
+    // {
+    //   urls: 'stun:[STUN_IP]:[PORT]',
+    //   'credentials': '[YOR CREDENTIALS]',
+    //   'username': '[USERNAME]'
+    // },
+    {
+      urls: 'stun:stun.l.google.com:19302',
+    },
+  ],
+};
+const SOCKET_SERVER_URL = 'http://localhost:8080';
 
-  // global states
-  // const pc = new RTCPeerConnection(servers);
-  // let localStream = null; 
-  // let remoteStream = null  
-    const handleWebCamClick = ()=>{
-     // Get the media stream from the user's device
-    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-    .then(function(stream) {
-      // Create a new RTCPeerConnection
-      var pc = new RTCPeerConnection();
-      
-      // Add the media stream to the peer connection
-      stream.getTracks().forEach(function(track) {
-        pc.addTrack(track, stream);
+const StreamCameras = () => {
+  const socketRef = useRef();
+  const pcsRef = useRef({});
+  const localVideoRef = useRef(null);
+  const localStreamRef = useRef();
+  const [users, setUsers] = useState([]);
+
+  const getLocalStream = useCallback(async () => {
+    try {
+      const localStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: {
+          width: 240,
+          height: 240,
+        },
       });
-      
-      // Set up the data channel for sending data
-      var dataChannel = pc.createDataChannel('media-stream');
-      dataChannel.onopen = function() {
-        console.log('Data channel open');
+      localStreamRef.current = localStream;
+      if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
+      if (!socketRef.current) return;
+      socketRef.current.emit('join_room', {
+        room: '1234',
+        email: 'sample@naver.com',
+      });
+    } catch (e) {
+      console.log(`getUserMedia error: ${e}`);
+    }
+  }, []);
+
+  const createPeerConnection = useCallback((socketID, email) => {
+    try {
+      const pc = new RTCPeerConnection(pc_config);
+
+      pc.onicecandidate = (e) => {
+        if (!(socketRef.current && e.candidate)) return;
+        console.log('onicecandidate');
+        socketRef.current.emit('candidate', {
+          candidate: e.candidate,
+          candidateSendID: socketRef.current.id,
+          candidateReceiveID: socketID,
+        });
       };
-      
-      // Set up the signaling connection
-      var signalingConnection = new WebSocket('ws://localhost:8080');
-      signalingConnection.onopen = function() {
-        console.log('Signaling connection open');
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-        // Send an offer to the other peer
-        pc.createOffer()
-          .then(function(offer) {
-            return pc.setLocalDescription(offer);
-          })
-          .then(function() {
-            signalingConnection.send(JSON.stringify({
-              type: 'offer',
-              sdp: pc.localDescription.sdp
-            }));
-          });
+
+      pc.oniceconnectionstatechange = (e) => {
+        console.log(e);
       };
-      
-      // Handle incoming messages from the signaling server
-      signalingConnection.onmessage = function(event) {
-        var message = JSON.parse(event.data);
-        if (message.type === 'answer') {
-          // Set the remote description based on the answer from the other peer
-          pc.setRemoteDescription(new RTCSessionDescription({
-            type: 'answer',
-            sdp: message.sdp
-          }));
-        } else if (message.type === 'candidate') {
-          // Add the ICE candidate received from the other peer
-          pc.addIceCandidate(new RTCIceCandidate(message.candidate));
-        } else if (message.type === 'media-stream') {
-          // Handle incoming media stream from other peer
-          var remoteStream = new MediaStream();
-          message.tracks.forEach(function(track) {
-            var remoteTrack = remoteStream.addTrack(new MediaStreamTrack(track), remoteStream);
-          });
-          // Attach remote stream to a video element
-          var remoteVideo = document.getElementById('remote-video');
-          remoteVideo.srcObject = remoteStream;
-        }
+
+      pc.ontrack = (e) => {
+        console.log('ontrack success');
+        setUsers((oldUsers) =>
+          oldUsers
+            .filter((user) => user.id !== socketID)
+            .concat({
+              id: socketID,
+              email,
+              stream: e.streams[0],
+            }),
+        );
       };
+
+      if (localStreamRef.current) {
+        console.log('localstream add');
+        localStreamRef.current.getTracks().forEach((track) => {
+          if (!localStreamRef.current) return;
+          pc.addTrack(track, localStreamRef.current);
+        });
+      } else {
+        console.log('no local stream');
+      }
+
+      return pc;
+    } catch (e) {
+      console.error(e);
+      return undefined;
+    }
+  }, []);
+
+  useEffect(() => {
+    socketRef.current = io.connect(SOCKET_SERVER_URL);
+    getLocalStream();
+
+    socketRef.current.on('all_users', (allUsers, sender) => {
+      // if(sender=="sample@naver.com")
+      // {
+        
+        allUsers.filter(x=>x.id==sender).forEach(async (user) => {
+          if (!localStreamRef.current) return;
+          const pc = createPeerConnection(user.id, user.email);
+          if (!(pc && socketRef.current)) return;
+          pcsRef.current = { ...pcsRef.current, [user.id]: pc };
+          try {
+            const localSdp = await pc.createOffer({
+              offerToReceiveAudio: true,
+              offerToReceiveVideo: true,
+            });
+            console.log('create offer success');
+            await pc.setLocalDescription(new RTCSessionDescription(localSdp));
+            socketRef.current.emit('offer', {
+              sdp: localSdp,
+              offerSendID: socketRef.current.id,
+              offerSendEmail: 'offerSendSample@sample.com',
+              offerReceiveID: user.id,
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        });
+      // }
       
-      // Send ICE candidates to the other peer
-      pc.onicecandidate = function(event) {
-        if (event.candidate) {
-          signalingConnection.send(JSON.stringify({
-            type: 'candidate',
-            candidate: event.candidate
-          }));
-        }
-      };
-      
-      // Listen for incoming media streams from the other peer
-      pc.ontrack = function(event) {
-        // Send the incoming media stream to the other peer
-        signalingConnection.send(JSON.stringify({
-          type: 'media-stream',
-          tracks: event.streams[0].getTracks().map(function(track) {
-            return track.clone().toJSON();
-          })
-        }));
-        // Attach local stream to a video element
-        // var localVideo = document.getElementById('local-video');
-        // localVideo.srcObject = stream;
-       
-      };
-    })
-    .catch(function(error) {
-      console.error(error);
     });
 
-  
-    }
+    socketRef.current.on(
+      'getOffer',
+      async (data) => {
+        const { sdp, offerSendID, offerSendEmail } = data;
+        console.log('get offer');
+        if (!localStreamRef.current) return;
+        const pc = createPeerConnection(offerSendID, offerSendEmail);
+        if (!(pc && socketRef.current)) return;
+        pcsRef.current = { ...pcsRef.current, [offerSendID]: pc };
+        try {
+          await pc.setRemoteDescription(new RTCSessionDescription(sdp));
+          console.log('answer set remote description success');
+          const localSdp = await pc.createAnswer({
+            offerToReceiveVideo: true,
+            offerToReceiveAudio: true,
+          });
+          await pc.setLocalDescription(new RTCSessionDescription(localSdp));
+          socketRef.current.emit('answer', {
+            sdp: localSdp,
+            answerSendID: socketRef.current.id,
+            answerReceiveID: offerSendID,
+          });
+        } catch (e) {
+          console.error(e);
+        }
+      },
+    );
+
+    socketRef.current.on(
+      'getAnswer',
+      (data) => {
+        const { sdp, answerSendID } = data;
+        console.log('get answer');
+        const pc = pcsRef.current[answerSendID];
+        if (!pc) return;
+        pc.setRemoteDescription(new RTCSessionDescription(sdp));
+      },
+    );
+
+    socketRef.current.on(
+      'getCandidate',
+      async (data) => {
+        console.log('get candidate');
+        const pc = pcsRef.current[data.candidateSendID];
+        if (!pc) return;
+        await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+        console.log('candidate add success');
+      },
+    );
+
+    socketRef.current.on('user_exit', (data) => {
+      if (!pcsRef.current[data.id]) return;
+      pcsRef.current[data.id].close();
+      delete pcsRef.current[data.id];
+      setUsers((oldUsers) => oldUsers.filter((user) => user.id !== data.id));
+    });
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+      users.forEach((user) => {
+        if (!pcsRef.current[user.id]) return;
+        pcsRef.current[user.id].close();
+        delete pcsRef.current[user.id];
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createPeerConnection, getLocalStream]);
+
   return (
     <div>
-        <StreamingCameraOptions/>
-        <Button variant="primary" size="lg" onClick={handleWebCamClick}>
-            Start Webcam
-        </Button>
-        <div className="videos">
-      <span>
-        <h3>Local Stream</h3>
-        <video ref={videoRef}></video>
-      </span>
-      <span>
-        <h3>Remote Stream</h3>
-        <video id="remoteVideo"></video>
-      </span>
+      {/* <video
+        style={{
+          width: 240,
+          height: 240,
+          margin: 5,
+          backgroundColor: 'black',
+        }}
+        muted
+        ref={localVideoRef}
+        autoPlay
+      /> */}
 
+      {users.map((user, index) => (
+        // <video src={user.stream}></video>
+        <Video key={index} email={user.email} stream={user.stream} muted={true}/>
+      ))}
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default StreamIp
+export default StreamCameras;
