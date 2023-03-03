@@ -16,7 +16,7 @@ const pc_config = {
     },
   ],
 };
-const SOCKET_SERVER_URL = 'http://localhost:8080';
+const SOCKET_SERVER_URL = process.env.REACT_APP_SIGNALLING_SERVER_URL;
 
 const StreamCameras = () => {
   const socketRef = useRef();
