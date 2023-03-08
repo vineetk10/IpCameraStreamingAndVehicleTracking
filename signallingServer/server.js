@@ -6,6 +6,27 @@ let server = http.createServer(app);
 let socketio = require('socket.io');
 let io = socketio.listen(server);
 
+
+// Added code to receive file from client
+const multer = require('multer');
+const ffmpeg = require('fluent-ffmpeg');
+
+// Set up the file upload destination
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, 'uploads');
+    },
+    filename: function(req, file, cb) {
+      cb(null, file.originalname);
+    }
+  });
+
+
+  const upload = multer({ storage: storage });
+
+
+
+
 app.use(cors());
 const PORT = process.env.PORT || 8080;
 
@@ -77,6 +98,25 @@ io.on('connection', socket => {
         console.log(users);
     })
 });
+
+
+// Handle the file upload and conversion
+app.post('/upload', upload.single('file'), function(req, res, next) {
+    const inputFile = `uploads/${req.file.filename}`;
+    const outputFile = `uploads/${req.file.filename.replace(/\.[^/.]+$/, '')}.mp4`;
+    console.log("******************************** Inside upload")
+    
+    ffmpeg(inputFile)
+      .output(outputFile)
+      .on('end', function() {
+        console.log('Video conversion complete');
+        res.status(200).send('Video uploaded and converted successfully');
+      })
+      .run();
+  });
+
+
+
 
 server.listen(PORT, () => {
     console.log(`server running on ${PORT}`);
