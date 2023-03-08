@@ -35,22 +35,61 @@ const StreamCameras = () => {
         },
       });
 
-      const mimeType = 'audio/webm';
-      let chunks = [];
-      const recorder = new MediaRecorder(localStream, { type: mimeType, timeslice: 1000  });
-      recorder.start(1000);
+//       const mimeType = 'audio/webm';
+//       let chunks = [];
+//       const recorder = new MediaRecorder(localStream, { type: mimeType, timeslice: 1000  });
+//       recorder.start(1000);
 
+      let chunks = [];
+      let totalSize = 0;
+      const CHUNK_SIZE = 10;  // each chunk is of 50 KBs, so each file would be aroung 400-500 KBs and contain 10 second video, we can change it to have 30 mins videos
+      const mediaRecorderOptions = {
+        mimeType: 'video/webm;codecs=h264',
+        timeslice: 50000 // 50 KB
+      };
+      const recorder = new MediaRecorder(localStream, mediaRecorderOptions);
+      recorder.start(1000);
+      
       recorder.ondataavailable = (event) => {
-        console.log("dataavailable ");
-        if (typeof event.data === 'undefined') return;
-        if (event.data.size === 0) return;
+        console.log('Recording started');
         chunks.push(event.data);
+        if (chunks.length >= CHUNK_SIZE) {
+          if (recorder.state === 'recording') {
+            recorder.stop();
+          }
+        }
+      };
+      recorder.onstop = (event) => {
+        console.log('Recording stopped');
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        chunks = [];
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+        // send counter in file name to verify
+        totalSize+= 1;
+        formData.append('file', blob, totalSize + '_myvideo.webm');
+        xhr.open('POST', SOCKET_SERVER_URL + '/upload', true);
+        xhr.onreadystatechange = function() {
+          if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            console.log('Video uploaded successfully!');
+          }
+        };
+        xhr.send(formData);
+        recorder.start(1000);
       };
       
-      recorder.onstop = async () => {
-        const videoBlob = new Blob(chunks, { type: 'video/webm' });
-        // send the videoBlob to the AWS Lambda function
-      };
+      
+//       recorder.ondataavailable = (event) => {
+//         console.log("dataavailable ");
+//         if (typeof event.data === 'undefined') return;
+//         if (event.data.size === 0) return;
+//         chunks.push(event.data);
+//       };
+      
+//       recorder.onstop = async () => {
+//         const videoBlob = new Blob(chunks, { type: 'video/webm' });
+//         // send the videoBlob to the AWS Lambda function
+//       };
 
       // recorder.addEventListener('dataavailable', event => {
       //   console.log("dataavailable ");
