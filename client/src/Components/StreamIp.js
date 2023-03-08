@@ -34,6 +34,40 @@ const StreamCameras = () => {
           height: 240,
         },
       });
+
+      const mimeType = 'audio/webm';
+      let chunks = [];
+      const recorder = new MediaRecorder(localStream, { type: mimeType, timeslice: 1000  });
+      recorder.start(1000);
+
+      recorder.ondataavailable = (event) => {
+        console.log("dataavailable ");
+        if (typeof event.data === 'undefined') return;
+        if (event.data.size === 0) return;
+        chunks.push(event.data);
+      };
+      
+      recorder.onstop = async () => {
+        const videoBlob = new Blob(chunks, { type: 'video/webm' });
+        // send the videoBlob to the AWS Lambda function
+      };
+
+      // recorder.addEventListener('dataavailable', event => {
+      //   console.log("dataavailable ");
+      //   if (typeof event.data === 'undefined') return;
+      //     if (event.data.size === 0) return;
+      //     chunks.push(event.data);
+      //   });
+      // recorder.addEventListener('stop', () => {
+      //   const recording = new Blob(chunks, {
+      //     type: mimeType
+      //   });
+      //   // renderRecording(recording, list);
+      //   chunks = [];
+      // });
+      
+      console.log("CHUNKS ", chunks);
+
       localStreamRef.current = localStream;
       if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
       if (!socketRef.current) return;
@@ -65,7 +99,8 @@ const StreamCameras = () => {
       };
 
       pc.ontrack = (e) => {
-        console.log('ontrack success');
+
+        // console.log(e.streams[0]);
         setUsers((oldUsers) =>
           oldUsers
             .filter((user) => user.id !== socketID)
