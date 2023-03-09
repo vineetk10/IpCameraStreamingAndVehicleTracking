@@ -83,26 +83,24 @@ exports.login = async (req, res) => {
         else {
           
           const result = await user.comparePassword(req.body.password);
+          const ipPresent = user.cameras.find(obj=> obj.ip===req.body.ipAddress);
           if(result){
-            console.log("Login successful");
-            // res.cookie('cookie',"user",{maxAge: 900000, httpOnly: false, path : '/'});
-            // res.cookie('userId',user._id,{maxAge: 900000, httpOnly: false, path : '/'});
-            // res.cookie('userEmail',user.emailId,{maxAge: 900000, httpOnly: false, path : '/'});
-            // res.cookie('userFirstName',user.firstName,{maxAge: 900000, httpOnly: false, path : '/'});
-            // res.cookie('userLastName',user.lastName,{maxAge: 900000, httpOnly: false, path : '/'});
-            // res.cookie('userLocation',user.address.city,{maxAge: 900000, httpOnly: false, path : '/'});
-
-            // res.writeHead(200,{
-            // 'Content-Type' : 'text/plain'
-            // })
-            // res.end("Successful Login");
-            res.send(user);
-
+            if(req.body.ipAddress == "")
+                res.send({emailId : user.emailId, name: user.name , roomId: user.roomId});
+            else if(ipPresent)
+            {
+                const ipName = user.cameras.find(cam=>cam.ip == req.body.ipAddress).name;
+                res.send({emailId : user.emailId, name: ipName, roomId: user.roomId});
+            }
+            else
+                res
+                    .status(400)
+                    .send(JSON.stringify({ error: "Invalid login credentials." }));
 
         } else {
             res
                 .status(400)
-                .send(JSON.stringify({ message: "Invalid login credentials." }));
+                .send(JSON.stringify({ error: "Invalid login credentials." }));
 
         }
     }

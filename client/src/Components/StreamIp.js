@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 // import Video from './Components/Video';
 import Video from './Video';
 import { WebRTCUser } from './types';
-
+const user = JSON.parse(localStorage.getItem("jwt"));
 const pc_config = {
   iceServers: [
     // {
@@ -111,8 +111,8 @@ const StreamCameras = () => {
       if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
       if (!socketRef.current) return;
       socketRef.current.emit('join_room', {
-        room: '1234',
-        email: 'sample@naver.com',
+        room: user.roomId,
+        email: user.emailId,
       });
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
@@ -191,7 +191,7 @@ const StreamCameras = () => {
             socketRef.current.emit('offer', {
               sdp: localSdp,
               offerSendID: socketRef.current.id,
-              offerSendEmail: 'offerSendSample@sample.com',
+              offerSendEmail: user.name ?? "IP",
               offerReceiveID: user.id,
             });
           } catch (e) {

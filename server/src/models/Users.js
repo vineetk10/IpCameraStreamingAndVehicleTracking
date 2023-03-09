@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
+const { ObjectID } = require('bson');
 
 
 const UserSchema = new mongoose.Schema({
@@ -25,7 +26,13 @@ const UserSchema = new mongoose.Schema({
             connection: String,
             token: String 
         }
-    ]
+    ],
+    roomId : {
+        type: mongoose.Schema.Types.ObjectId,
+        index: true,
+        required: true,
+        auto: true,
+    }
 });
 
   

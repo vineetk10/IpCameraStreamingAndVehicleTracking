@@ -12,10 +12,12 @@ const Login = () => {
     password: "",
     error: "",
     loading: false,
-    didRedirect:false
+    didRedirect:false,
+    isIp: false,
+    ipAddress: ""
   });
 
-  const { email, password, error, loading, didRedirect } = values;
+  const { email, password, error, loading, didRedirect, ipAddress } = values;
   // const {user}= isAutheticated();
   const handleChange = email => event => {
     setValues({ ...values, error: false, [email]: event.target.value });
@@ -50,7 +52,7 @@ const Login = () => {
   const onSubmit = event =>{
       event.preventDefault();
     setValues({...values,error:false,loading:true})
-    signin({emailId:email,password})
+    signin({emailId:email,password, ipAddress})
     .then(data =>{
       if(data.error){
         setValues({...values,error:data.error,loading:false})
@@ -95,6 +97,19 @@ const Login = () => {
                 value={password}
               />
             </div>
+            <div className="form-group">
+            <label className="text-secondary">Is IP?</label>
+            <input type="checkbox" onClick={()=>setValues({...values,isIp:!values.isIp})}></input>
+            </div>
+           {values.isIp && <div className="form-group">
+           <label className="text-secondary">Ip Address</label>
+              <input
+                className="form-control"
+                onChange={handleChange("ipAddress")}
+                type="text"
+                value={ipAddress}
+              />
+            </div>}
             <Link          
           className="nav-link text-danger text-center"
           to="/forgotpassword"
