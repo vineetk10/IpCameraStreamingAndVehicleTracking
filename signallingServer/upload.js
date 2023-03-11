@@ -17,8 +17,41 @@ const contentType = 'video/mp4';
 // Define the directory to watch for new videos
 const videoDir = './uploads/';
 
+// to find the length of the video
+const { exec } = require('child_process');
+
+function getVideoDuration(filePath) {
+  return new Promise((resolve, reject) => {
+    const cmd = `ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 "${filePath}"`;
+    exec(cmd, (err, stdout, stderr) => {
+      if (err) {
+        reject(err);
+      } else if (stderr) {
+        reject(new Error(stderr));
+      } else {
+        const duration = parseFloat(stdout);
+        if (isNaN(duration)) {
+          reject(new Error('Failed to parse duration'));
+        } else {
+          resolve(duration);
+        }
+      }
+    });
+  });
+}
+
+
+
 // Function to upload a single video file to S3 and delete it from the directory
 function uploadVideo(videoPath) {
+    let length;
+    console.log('Inside uploadVideo')
+    getVideoDuration(videoPath)
+    .then(duration => 
+        //console.error(`Duration of the video ${duration}`) 
+        length = duration 
+    )
+    .catch(err => console.error(`Failed to get video duration: ${err.message}`));
     const key = path.basename(videoPath);
     const params = {
       Bucket: bucketName,
@@ -33,7 +66,7 @@ function uploadVideo(videoPath) {
         const s3URI = `s3://${bucketName}/${key}`;
         
         // S3 URI can be used for playback
-        console.log(`Video uploaded successfully. URL: ${data.Location} S3 URI: ${s3URI}`);
+        console.log(`Video uploaded successfully. URL: ${data.Location} S3 URI: ${s3URI}, duration: ${length}`);
         // Delete the video file from the directory
         fs.unlink(videoPath, (err) => {
           if (err) {
