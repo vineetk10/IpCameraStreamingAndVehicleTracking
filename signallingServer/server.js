@@ -10,6 +10,8 @@ let io = socketio.listen(server);
 // Added code to receive file from client
 const multer = require('multer');
 const ffmpeg = require('fluent-ffmpeg');
+const checkForNewVideos = require('./upload');
+const fs = require('fs');
 
 // Set up the file upload destination
 const storage = multer.diskStorage({
@@ -110,6 +112,12 @@ app.post('/upload', upload.single('file'), function(req, res, next) {
       .output(outputFile)
       .on('end', function() {
         console.log('Video conversion complete');
+        fs.unlink(inputFile, function (err) {
+            if (err) {
+                console.log('Error deleting input file:', err);
+            } else {
+                console.log('Input file deleted successfully');
+            }})
         res.status(200).send('Video uploaded and converted successfully');
       })
       .run();
@@ -120,4 +128,5 @@ app.post('/upload', upload.single('file'), function(req, res, next) {
 
 server.listen(PORT, () => {
     console.log(`server running on ${PORT}`);
+    checkForNewVideos();
 });
