@@ -184,3 +184,51 @@ exports.liveFeed = async ( req, res ) => {
     }
  
 }
+
+// Save Recording
+
+exports.saveRecording = async ( req, userId ) => {
+    console.log("Inside saveRecording user");
+    console.log(req)
+
+
+    try {
+        
+        await UserModel.updateOne({_id: userId}, {
+            $push : {
+                recordings :  
+                     req
+                
+            }
+        }) 
+        console.log("completed")
+        // res.send(JSON.stringify({Response: "added successfully"}));
+        
+
+    } catch (error) {
+        console.log(error)
+        // res
+            //  .status(500)
+            //  .send(JSON.stringify({ message: "Something went wrong!", error }));
+ 
+    }
+ 
+}
+
+
+exports.fetchRecordings= async (req, res) => {
+    try{
+      
+        // const page = parseInt(req.query.page);
+        // const limit = parseInt(req.query.limit);
+        // const skipIndex = (page - 1) * limit;
+        
+        const results = await UserModel.find({_id: req.params.id }, {recordings:1})
+
+        res.status(200).send(results)
+        
+    }
+    catch(err){
+        console.log("Inside fetchRecordings : " + err);
+    }
+}
