@@ -9,6 +9,26 @@ var OpenVidu = require("openvidu-node-client").OpenVidu;
 var UserRouter = require("./routers/UserRouter")
 
 
+const multer = require('multer');
+const ffmpeg = require('fluent-ffmpeg');
+const checkForNewVideos = require('./upload');
+const fs = require('fs');
+
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, 'uploads');
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+
+const upload = multer({ storage: storage });
+
+
+
 app.use(express.json());
 app.use(cors({
     origin: "*",
@@ -38,17 +58,40 @@ app.get("/", function(req,resp){
     resp.send("MultiCamera Object Tracking Endpoints");
 });
 
-app.use("/users", UserRouter);
-
-
-
-// Open Vidu Basic node implementation for connection to a web conference
-
 
 // Allow application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 // Allow application/json
 app.use(bodyParser.json());
+
+
+// Handle the file upload and conversion
+app.post('/upload', upload.single('file'), function(req, res) {
+  console.log("******************************** Inside upload")
+  const inputFile = `./uploads/${req.file.filename}`;
+  const outputFile = `./uploads/${req.file.filename.replace(/\.[^/.]+$/, '')}.mp4`;
+  console.log("******************************** Inside upload")
+  
+  ffmpeg(inputFile)
+    .output(outputFile)
+    .on('end', function() {
+      console.log('Video conversion complete');
+      fs.unlink(inputFile, function (err) {
+          if (err) {
+              console.log('Error deleting input file:', err);
+          } else {
+              console.log('Input file deleted successfully');
+          }})
+      res.status(200).send('Video uploaded and converted successfully');
+    })
+    .run();
+});
+
+app.use("/users", UserRouter);
+
+
+
+// Open Vidu Basic node implementation for connection to a web conference
 
 
 
@@ -117,6 +160,8 @@ app.post("/api/sessions/:sessionId/ipcamera", async (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`)
+    // Call the checkForNewVideos function when the Node.js application starts up
+    checkForNewVideos();
 })
 
 
