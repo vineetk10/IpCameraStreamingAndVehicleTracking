@@ -32,7 +32,17 @@ const UserSchema = new mongoose.Schema({
         index: true,
         required: true,
         auto: true,
-    }
+    },
+    recordings : [
+        {
+            cameraName: String,
+            name: String,
+            startDate: Date,
+            endDate: Date,
+            duration: Number,
+            s3URI:String
+        }
+    ]
 });
 
   
