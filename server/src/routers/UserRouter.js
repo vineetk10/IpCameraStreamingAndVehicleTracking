@@ -36,4 +36,7 @@ router.get("/:emailId", userController.find);
 // User Login
 router.post("/login", userController.login);
 
+// Fetch the recordings for a user
+router.get("/recordings/:id", userController.fetchRecordings);
+
 module.exports = router;
