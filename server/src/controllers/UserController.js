@@ -223,7 +223,7 @@ exports.fetchRecordings= async (req, res) => {
         // const limit = parseInt(req.query.limit);
         // const skipIndex = (page - 1) * limit;
         
-        const results = await UserModel.find({_id: req.params.id }, {recordings:1})
+        const results = await UserModel.findOne({_id: req.params.id }, {recordings:1})
 
         res.status(200).send(results)
         
