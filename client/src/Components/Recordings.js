@@ -5,7 +5,7 @@ import { API } from '../backend';
 function Recordings() {
 
     const getAllRecordings = async()=>{
-        const recordings = await fetch(`${process.env.REACT_APP_SERVER_URL}/users/recordings/${JSON.parse(localStorage.getItem("jwt")).emailId}`, {
+        const recordings = await fetch(`${process.env.REACT_APP_SERVER_URL}/users/recordings/${JSON.parse(localStorage.getItem("jwt")).id}`, {
             method: "GET",
           })
             .then(response => {

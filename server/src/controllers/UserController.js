@@ -187,14 +187,14 @@ exports.liveFeed = async ( req, res ) => {
 
 // Save Recording
 
-exports.saveRecording = async ( req, emailId ) => {
+exports.saveRecording = async ( req, userId ) => {
     console.log("Inside saveRecording user");
     console.log(req)
 
 
     try {
         
-        await UserModel.updateOne({emailId: emailId}, {
+        await UserModel.updateOne({_id: userId}, {
             $push : {
                 recordings :  
                      req
@@ -223,7 +223,7 @@ exports.fetchRecordings= async (req, res) => {
         // const limit = parseInt(req.query.limit);
         // const skipIndex = (page - 1) * limit;
         
-        const results = await UserModel.find({emailId: req.params.id }, {recordings:1})
+        const results = await UserModel.find({_id: req.params.id }, {recordings:1})
 
         res.status(200).send(results)
         

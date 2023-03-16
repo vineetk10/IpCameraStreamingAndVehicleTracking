@@ -61,7 +61,7 @@ const StreamCameras = () => {
         // send counter in file name to verify
 
 
-        var fileName = user.emailId + '_' + user.name + '_' + Date.now() + '.webm' ;
+        var fileName = user.id + '_' + user.name + '_' + Date.now() + '.webm' ;
         // totalSize+= 1;
         formData.append('file', blob, fileName);
         xhr.open('POST', BACKEND_SERVER_URL + '/upload', true);
