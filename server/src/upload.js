@@ -96,7 +96,7 @@ function uploadVideo(videoPath) {
         
         var req = {
           cameraName: individualDetails[1],
-          name: individualDetails[1],
+          name: individualPath,
           startDate: videoStartPST,
           endDate: videoEndPST,
           duration : length,
