@@ -89,7 +89,7 @@ function uploadVideo(videoPath) {
         var videoEndPST = videoEnd.replace('Z', '-08:00')
         // console.log(videoStartPST)
         // console.log(videoEndPST)
-        var userId = individualDetails[0]
+        var emailId = individualDetails[0]
         
         var req = {
           cameraName: individualDetails[1],
@@ -100,7 +100,7 @@ function uploadVideo(videoPath) {
           s3URI: s3URI
          }
          console.log('Before Recording ************************************ ', userId)
-         userController.saveRecording(req, userId)
+         userController.saveRecording(req, emailId)
          console.log('After Recording ************************************ ')
 
                  // Delete the video file from the directory

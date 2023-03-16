@@ -4,22 +4,18 @@ import { API } from '../backend';
 
 function Recordings() {
 
-    // const getAllRecordings = ()=>{
-    //     return fetch(`${API}/users/register`, {
-    //         method: "POST",
-    //         headers: {
-    //           Accept: "application/json",
-    //           "Content-Type": "application/json"
-    //         },
-    //         body: JSON.stringify()
-    //       })
-    //         .then(response => {
-    //           return response.json();
-    //         })
-    //         .catch(err => console.log(err));
-    // }
+    const getAllRecordings = async()=>{
+        const recordings = await fetch(`${process.env.REACT_APP_SERVER_URL}/users/recordings/${JSON.parse(localStorage.getItem("jwt")).emailId}`, {
+            method: "GET",
+          })
+            .then(response => {
+              return response.json();
+            })
+            .catch(err => console.log(err));
+        console.log("Recordings are "+recordings);
+    }
     useEffect(()=>{
-        // getAllRecordings();
+        getAllRecordings();
     })
   return (
     <div>
