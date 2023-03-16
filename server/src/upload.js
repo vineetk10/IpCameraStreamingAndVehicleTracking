@@ -51,14 +51,14 @@ function getVideoDuration(filePath) {
 
 // Function to upload a single video file to S3 and delete it from the directory
 function uploadVideo(videoPath) {
-    let length;
+    let length = 30;
     console.log('Inside uploadVideo')
-    getVideoDuration(videoPath)
-    .then(duration => 
-        //console.error(`Duration of the video ${duration}`) 
-        length = duration 
-    )
-    .catch(err => console.error(`Failed to get video duration: ${err.message}`));
+    // getVideoDuration(videoPath)
+    // .then(duration => 
+    //     //console.error(`Duration of the video ${duration}`) 
+    //     length = duration 
+    // )
+    // .catch(err => console.error(`Failed to get video duration: ${err.message}`));
     const key = path.basename(videoPath);
     const params = {
       Bucket: bucketName,
