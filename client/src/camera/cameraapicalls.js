@@ -2,7 +2,7 @@ import { API } from "../backend";
 
 export const addCamera = camera => {
     console.log(localStorage.getItem("jwt"))
-  return fetch(`${API}/users/registerCamera/${JSON.parse(localStorage.getItem("jwt"))._id}`, {
+  return fetch(`${API}/users/registerCamera/${JSON.parse(localStorage.getItem("jwt")).emailId}`, {
     method: "POST",
     headers: {
       Accept: "application/json",

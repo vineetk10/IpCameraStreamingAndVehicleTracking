@@ -37,7 +37,7 @@ const AddIPCamera = () => {
           });
         }
       })
-      .catch(console.log("Error in signup"));
+      .catch((error)=>console.log("Error in adding ip camera ", error));
   };
 //   const RedirectToLogin = ()=>{
 //     history.push("/login");
