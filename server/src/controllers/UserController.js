@@ -86,11 +86,11 @@ exports.login = async (req, res) => {
           const ipPresent = user.cameras.find(obj=> obj.ip===req.body.ipAddress);
           if(result){
             if(req.body.ipAddress == "")
-                res.send({emailId : user.emailId, name: user.name , roomId: user.roomId});
+                res.send({id: user._id,emailId : user.emailId, name: user.name , roomId: user.roomId});
             else if(ipPresent)
             {
                 const ipName = user.cameras.find(cam=>cam.ip == req.body.ipAddress).name;
-                res.send({emailId : user.emailId, name: ipName, roomId: user.roomId});
+                res.send({id: user._id, emailId : user.emailId, name: ipName, roomId: user.roomId});
             }
             else
                 res
