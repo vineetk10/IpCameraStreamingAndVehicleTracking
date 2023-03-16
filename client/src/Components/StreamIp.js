@@ -1,16 +1,14 @@
+import { API } from "../backend";
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import io from 'socket.io-client';
 // import Video from './Components/Video';
 import Video from './Video';
 import { WebRTCUser } from './types';
+import Header from './Header';
 const user = JSON.parse(localStorage.getItem("jwt"));
+
 const pc_config = {
   iceServers: [
-    // {
-    //   urls: 'stun:[STUN_IP]:[PORT]',
-    //   'credentials': '[YOR CREDENTIALS]',
-    //   'username': '[USERNAME]'
-    // },
     {
       urls: 'stun:stun.l.google.com:19302',
     },
@@ -24,7 +22,6 @@ const StreamCameras = () => {
   const localVideoRef = useRef(null);
   const localStreamRef = useRef();
   const [users, setUsers] = useState([]);
-
   const getLocalStream = useCallback(async () => {
     try {
       const localStream = await navigator.mediaDevices.getUserMedia({
@@ -34,11 +31,6 @@ const StreamCameras = () => {
           height: 240,
         },
       });
-
-//       const mimeType = 'audio/webm';
-//       let chunks = [];
-//       const recorder = new MediaRecorder(localStream, { type: mimeType, timeslice: 1000  });
-//       recorder.start(1000);
 
       let chunks = [];
       let totalSize = 0;
@@ -78,48 +70,21 @@ const StreamCameras = () => {
         recorder.start(1000);
       };
       
-      
-//       recorder.ondataavailable = (event) => {
-//         console.log("dataavailable ");
-//         if (typeof event.data === 'undefined') return;
-//         if (event.data.size === 0) return;
-//         chunks.push(event.data);
-//       };
-      
-//       recorder.onstop = async () => {
-//         const videoBlob = new Blob(chunks, { type: 'video/webm' });
-//         // send the videoBlob to the AWS Lambda function
-//       };
-
-      // recorder.addEventListener('dataavailable', event => {
-      //   console.log("dataavailable ");
-      //   if (typeof event.data === 'undefined') return;
-      //     if (event.data.size === 0) return;
-      //     chunks.push(event.data);
-      //   });
-      // recorder.addEventListener('stop', () => {
-      //   const recording = new Blob(chunks, {
-      //     type: mimeType
-      //   });
-      //   // renderRecording(recording, list);
-      //   chunks = [];
-      // });
-      
-      console.log("CHUNKS ", chunks);
-
       localStreamRef.current = localStream;
       if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
       if (!socketRef.current) return;
       socketRef.current.emit('join_room', {
         room: user.roomId,
         email: user.emailId,
+        name: user.name,
+        isIp: user.isIp
       });
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
     }
   }, []);
 
-  const createPeerConnection = useCallback((socketID, email) => {
+  const createPeerConnection = useCallback((socketID, name) => {
     try {
       const pc = new RTCPeerConnection(pc_config);
 
@@ -145,7 +110,7 @@ const StreamCameras = () => {
             .filter((user) => user.id !== socketID)
             .concat({
               id: socketID,
-              email,
+              name: name,
               stream: e.streams[0],
             }),
         );
@@ -173,14 +138,11 @@ const StreamCameras = () => {
     getLocalStream();
 
     socketRef.current.on('all_users', (allUsers, sender) => {
-      // if(sender=="sample@naver.com")
-      // {
-        
-        allUsers.filter(x=>x.id==sender).forEach(async (user) => {
+        allUsers.filter(x=>x.id==sender).forEach(async (userInfo) => {
           if (!localStreamRef.current) return;
-          const pc = createPeerConnection(user.id, user.email);
+          const pc = createPeerConnection(userInfo.id, userInfo.name);
           if (!(pc && socketRef.current)) return;
-          pcsRef.current = { ...pcsRef.current, [user.id]: pc };
+          pcsRef.current = { ...pcsRef.current, [userInfo.id]: pc };
           try {
             const localSdp = await pc.createOffer({
               offerToReceiveAudio: true,
@@ -191,8 +153,8 @@ const StreamCameras = () => {
             socketRef.current.emit('offer', {
               sdp: localSdp,
               offerSendID: socketRef.current.id,
-              offerSendEmail: user.name ?? "IP",
-              offerReceiveID: user.id,
+              offerSendEmail: user.name,
+              offerReceiveID: userInfo.id,
             });
           } catch (e) {
             console.error(e);
@@ -285,10 +247,9 @@ const StreamCameras = () => {
         ref={localVideoRef}
         autoPlay
       /> */}
-
+    <Header/>
       {users.map((user, index) => (
-        // <video src={user.stream}></video>
-        <Video key={index} email={user.email} stream={user.stream} muted={true}/>
+        <Video key={index} email={user.name} stream={user.stream} muted={true}/>
       ))}
     </div>
   );
