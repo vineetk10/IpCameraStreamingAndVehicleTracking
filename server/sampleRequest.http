@@ -62,3 +62,10 @@ content-type: application/json
 
 ###
 GET   http://localhost:5000/users/liveFeed/vivek.joshi17@sjsu.edu
+
+
+###
+GET   http://localhost:8000/users/recordings/63e588d81a45d5ed13627138
+
+###
+GET   http://localhost:8000/users/recordings/63e588d81a45d5ed13627138?name=

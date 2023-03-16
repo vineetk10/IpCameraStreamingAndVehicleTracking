@@ -15,6 +15,7 @@ const pc_config = {
   ],
 };
 const SOCKET_SERVER_URL = process.env.REACT_APP_SIGNALLING_SERVER_URL;
+const BACKEND_SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const StreamCameras = () => {
   const socketRef = useRef();
@@ -27,14 +28,14 @@ const StreamCameras = () => {
       const localStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: {
-          width: 240,
-          height: 240,
+          width: 400,
+          height: 400,
         },
       });
 
       let chunks = [];
-      let totalSize = 0;
-      const CHUNK_SIZE = 10;  // each chunk is of 50 KBs, so each file would be aroung 400-500 KBs and contain 10 second video, we can change it to have 30 mins videos
+      // let totalSize = 0;
+      const CHUNK_SIZE = 30;  // each chunk is of 50 KBs, so each file would be aroung 400-500 KBs and contain 10 second video, we can change it to have 30 mins videos
       const mediaRecorderOptions = {
         mimeType: 'video/webm;codecs=h264',
         timeslice: 50000 // 50 KB
@@ -58,9 +59,12 @@ const StreamCameras = () => {
         const xhr = new XMLHttpRequest();
         const formData = new FormData();
         // send counter in file name to verify
-        totalSize+= 1;
-        formData.append('file', blob, totalSize + '_myvideo.webm');
-        xhr.open('POST', SOCKET_SERVER_URL + '/upload', true);
+
+
+        var fileName = '63e588d81a45d5ed13627138' + '_' + '63e0905b3aba378267b43e68' + '_' + Date.now() + '.webm' ;
+        // totalSize+= 1;
+        formData.append('file', blob, fileName);
+        xhr.open('POST', BACKEND_SERVER_URL + '/upload', true);
         xhr.onreadystatechange = function() {
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             console.log('Video uploaded successfully!');

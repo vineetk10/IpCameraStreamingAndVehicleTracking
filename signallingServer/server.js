@@ -8,23 +8,23 @@ let io = socketio.listen(server);
 
 
 // Added code to receive file from client
-const multer = require('multer');
-const ffmpeg = require('fluent-ffmpeg');
-const checkForNewVideos = require('./upload');
-const fs = require('fs');
+// const multer = require('multer');
+// const ffmpeg = require('fluent-ffmpeg');
+// const checkForNewVideos = require('./upload');
+// const fs = require('fs');
 
-// Set up the file upload destination
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, 'uploads');
-    },
-    filename: function(req, file, cb) {
-      cb(null, file.originalname);
-    }
-  });
+// // Set up the file upload destination
+// const storage = multer.diskStorage({
+//     destination: function(req, file, cb) {
+//       cb(null, 'uploads');
+//     },
+//     filename: function(req, file, cb) {
+//       cb(null, file.originalname);
+//     }
+//   });
 
 
-  const upload = multer({ storage: storage });
+//   const upload = multer({ storage: storage });
 
 
 
@@ -103,30 +103,34 @@ io.on('connection', socket => {
 
 
 // Handle the file upload and conversion
-app.post('/upload', upload.single('file'), function(req, res, next) {
-    const inputFile = `uploads/${req.file.filename}`;
-    const outputFile = `uploads/${req.file.filename.replace(/\.[^/.]+$/, '')}.mp4`;
-    console.log("******************************** Inside upload")
+// app.post('/upload', upload.single('file'), function(req, res, next) {
+//     const inputFile = `uploads/${req.file.filename}`;
+//     const outputFile = `uploads/${req.file.filename.replace(/\.[^/.]+$/, '')}.mp4`;
+//     console.log("******************************** Inside upload")
     
-    ffmpeg(inputFile)
-      .output(outputFile)
-      .on('end', function() {
-        console.log('Video conversion complete');
-        fs.unlink(inputFile, function (err) {
-            if (err) {
-                console.log('Error deleting input file:', err);
-            } else {
-                console.log('Input file deleted successfully');
-            }})
-        res.status(200).send('Video uploaded and converted successfully');
-      })
-      .run();
-  });
+//     ffmpeg(inputFile)
+//       .output(outputFile)
+//       .on('end', function() {
+//         console.log('Video conversion complete');
+//         fs.unlink(inputFile, function (err) {
+//             if (err) {
+//                 console.log('Error deleting input file:', err);
+//             } else {
+//                 console.log('Input file deleted successfully');
+//             }})
+//         res.status(200).send('Video uploaded and converted successfully');
+//       })
+//       .run();
+//   });
 
 
 
 
 server.listen(PORT, () => {
     console.log(`server running on ${PORT}`);
-    checkForNewVideos();
+    // checkForNewVideos();
 });
+
+
+
+// command to remove client error - npm install --save-dev @testing-library/react@^11.0.0
