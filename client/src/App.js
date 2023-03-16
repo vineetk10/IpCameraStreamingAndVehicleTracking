@@ -8,6 +8,7 @@ import Signup from './Components/Signup';
 import AddIPCamera from './Components/AddIPCamera';
 import OpenViduReact from './Components/OpenViduReact';
 import React from 'react';
+import Recordings from './Components/Recordings';
 function App() {
   return (
     <div className="App">
@@ -31,6 +32,9 @@ function App() {
           </Route>
           <Route exact path="/streamOpenVidu">
               <OpenViduReact/>
+          </Route>
+          <Route exact path="/showRecordings">
+              <Recordings/>
           </Route>
         </Switch>
       </Router>
