@@ -29,12 +29,15 @@ function getVideoDuration(filePath) {
     const cmd = `ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 "${filePath}"`;
     exec(cmd, (err, stdout, stderr) => {
       if (err) {
+        console.log(err);
         reject(err);
       } else if (stderr) {
+        console.log(stderr);
         reject(new Error(stderr));
       } else {
         const duration = parseFloat(stdout);
         if (isNaN(duration)) {
+          console.log('Failed to parse duration');
           reject(new Error('Failed to parse duration'));
         } else {
           resolve(duration);
