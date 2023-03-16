@@ -47,9 +47,9 @@ io.on('connection', socket => {
                 socket.to(socket.id).emit('room_full');
                 return;
             }
-            users[data.room].push({id: socket.id, email: data.email});
+            users[data.room].push({id: socket.id, email: data.email, name: data.name, isIp: data.isIp});
         } else {
-            users[data.room] = [{id: socket.id, email: data.email}];
+            users[data.room] = [{id: socket.id, email: data.email, name: data.name, isIp: data.isIp}];
         }
 
         if(isFirstUser)
