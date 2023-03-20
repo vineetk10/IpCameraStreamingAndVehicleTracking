@@ -161,7 +161,7 @@ app.post("/api/sessions/:sessionId/ipcamera", async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`)
     // Call the checkForNewVideos function when the Node.js application starts up
-    checkForNewVideos();
+   // checkForNewVideos();
 })
 
 

@@ -24,7 +24,9 @@ const UserSchema = new mongoose.Schema({
             date: Date,
             session: String,
             connection: String,
-            token: String 
+            token: String,
+            isRTSP: Boolean,
+            port: Number 
         }
     ],
     roomId : {

@@ -1,5 +1,7 @@
 const UserModel =  require("../models/Users")
 const bcrypt = require("bcryptjs")
+var portsUtil = require("../rtsp/portsUtil")
+var webSocketUtils = require("../rtsp/webSocketUtils")
 
 
 
@@ -27,23 +29,63 @@ exports.registerCamera = async ( req, res ) => {
     // console.log("Inside resgiter user");
 
 
-    try {
-        
-        await UserModel.updateOne({_id: req.params.id}, {
-            $push : {
-                cameras :  
-                     req.body
-                
-            }
-        }) 
-        res.send(JSON.stringify({Response: "added successfully"}));
-        
+    if(req.body.isRTSP == 'true'){
+        console.log(req.body)
+        const port = portsUtil.getPort()
+        console.log('********* PORT ', port)
+        req.body.port = port
+        console.log('********* REQ ', req.body)
+        if(port == undefined){
+            console.log("INSIDE undefined")
+            res
+                     .status(500)
+                     .send(JSON.stringify({ message: "Sorry Currently no Ports are available" }));
+        }
+        else{
 
-    } catch (error) {
-        res
-             .status(500)
-             .send(JSON.stringify({ message: "Something went wrong!", error }));
- 
+            webSocketUtils.startStream(req.body, req.params.id)
+
+            try {
+        
+                await UserModel.updateOne({_id: req.params.id}, {
+                    $push : {
+                        cameras :  
+                             req.body
+                        
+                    }
+                }) 
+                res.send(JSON.stringify({Response: "added successfully"}));
+                
+        
+            } catch (error) {
+                res
+                     .status(500)
+                     .send(JSON.stringify({ message: "Something went wrong!", error }));
+         
+            }
+        }
+        
+    }
+
+    else{
+        try {
+            
+            await UserModel.updateOne({_id: req.params.id}, {
+                $push : {
+                    cameras :  
+                        req.body
+                    
+                }
+            }) 
+            res.send(JSON.stringify({Response: "added successfully"}));
+            
+
+        } catch (error) {
+            res
+                .status(500)
+                .send(JSON.stringify({ message: "Something went wrong!", error }));
+    
+        }
     }
  
 }
@@ -119,6 +161,18 @@ exports.deleteCamera = async ( req, res ) => {
 
 
     try {
+
+        const camera = await UserModel.findOne({emailId: req.params.emailId, cameras: { $elemMatch: { _id: req.params.cameraId } }}, {"cameras.$": 1})
+        console.log("****** CAMERA: ", camera.cameras[0])
+
+        if(camera.cameras[0].isRTSP === true){
+            console.log("INSIDE isRTSP port release")
+            // release port 
+            portsUtil.releasePort(camera.cameras[0].port)
+            
+            // release websocket connection
+            webSocketUtils.stopStream(camera.cameras[0].port)
+        }
         
         await UserModel.updateOne({emailId: req.params.emailId}, {
             $pull : {
@@ -165,15 +219,31 @@ exports.updateCamera = async ( req, res ) => {
 }
 
 
+
+// the socket and rtsp camera details
 exports.liveFeed = async ( req, res ) => {
     // console.log("Inside resgiter user");
 
 
     try {
         
-        const cameras = await UserModel.findOne({emailId: req.params.emailId}, {
-            cameras : 1
-        }) 
+        const cameras = await UserModel.aggregate([
+            { $match: { "emailId": req.params.emailId } },
+            { $project: {
+                cameras: {
+                  $filter: {
+                    input: "$cameras",
+                    as: "camera",
+                    cond: { $eq: [ "$$camera.isRTSP", true ] }
+                  }
+                }
+              }
+            }
+          ])
+//         const cameras = await UserModel.find(
+            
+//   { "emailId": req.params.emailId, "cameras": { $elemMatch: { "isRTSP": true } } },
+//   { "cameras": 1 }) 
         res.status(200).send(cameras)        
 
     } catch (error) {

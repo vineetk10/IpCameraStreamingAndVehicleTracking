@@ -1,0 +1,45 @@
+<html>
+    <style>
+        canvas {
+            width: : 100%;
+        }
+    </style>
+    <body>
+        <canvas id="canvas"></canvas>
+        <div id="content"></div>
+
+        <!-- <canvas id="canvas2"></canvas> -->
+    </body>
+
+    <script type="text/javascript" src="jsmpeg.min.js"></script>
+    <script type="text/javascript">
+        const content = document.getElementById("content");
+        const canvas = document.createElement("canvas");
+        const div = document.createElement("div")
+        const start = document.createElement("button");
+        start.textContent = "Start Stream";
+
+        const stop = document.createElement("button");
+        stop.textContent = "Stop Stream";
+        div.appendChild(canvas);
+        div.appendChild(start);
+        div.appendChild(stop);
+        content.appendChild(div);
+
+        start.addEventListener("click", () => {
+            fetch("http://localhost:8000/start-stream?port=50000&url=rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4&key=bunnyvideo2")
+        })
+
+        stop.addEventListener("click", () => {
+            fetch("http://localhost:8000/stop-stream?port=50000")
+        })
+        
+        player = new JSMpeg.Player("ws://localhost:50000",{
+            canvas,
+        });
+        // player = new JSMpeg.Player("ws://localhost:9001",{
+        //     canvas: document.getElementById("canvas2"),
+        // });
+    </script>
+
+</html>

@@ -160,5 +160,8 @@ function checkForNewVideos() {
 }
 
 // Schedule the checkForNewVideos function to run every 5 minutes
+
+checkForNewVideos();
+
 setInterval(checkForNewVideos, 3 * 60 * 1000);
 module.exports = checkForNewVideos;

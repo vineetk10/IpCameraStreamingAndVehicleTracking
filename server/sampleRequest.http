@@ -32,20 +32,21 @@ content-type: application/json
 
 
 ###
-POST http://localhost:5000/users/registerCamera/vivek.joshi17@sjsu.edu
+POST http://localhost:8000/users/registerCamera/63e08cd02e597b0ed6ce32be
 content-type: application/json
 
 {
-    "ip" : "rtsp://testing2",
-    "name": "Vivek Joshi",
+    "ip" : "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4",
+    "name": "testingRTSP",
     "session" : "sessiontesting2",
     "connection": "connectiontesting2",
-    "token": "tokentesting2"
+    "token": "tokentesting2",
+    "isRTSP": "true"
 }
 
 
 ###
-DELETE  http://localhost:5000/users/deleteCamera/vivek.joshi17@sjsu.edu/63e090343aba378267b43e66
+DELETE  http://localhost:8000/users/deleteCamera/vivek.joshi17@sjsu.edu/6417f1760d68acd4c8c663c3
 
 
 
@@ -61,7 +62,7 @@ content-type: application/json
 }
 
 ###
-GET   http://localhost:5000/users/liveFeed/vivek.joshi17@sjsu.edu
+GET   http://localhost:8000/users/liveFeed/vivek.joshi17@sjsu.edu
 
 
 ###
