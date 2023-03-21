@@ -29,7 +29,7 @@ exports.registerCamera = async ( req, res ) => {
     // console.log("Inside resgiter user");
 
 
-    if(req.body.isRTSP == 'true'){
+    if(req.body.isRTSP == true){
         console.log(req.body)
         const port = portsUtil.getPort()
         console.log('********* PORT ', port)
