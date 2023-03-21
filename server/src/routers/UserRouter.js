@@ -25,6 +25,8 @@ router.get("/refreshConnection/:emailId", userController.registerCamera);
 
 // have one end point to return camera id , name and token details for accessing livefeed
 // Working fine.
+
+router.get("/getCameras/:emailId", userController.getCameras);
 router.get("/liveFeed/:emailId", userController.liveFeed);
 
 

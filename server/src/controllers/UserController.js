@@ -220,6 +220,25 @@ exports.updateCamera = async ( req, res ) => {
 
 
 
+exports.getCameras = async ( req, res ) => {
+    // console.log("Inside resgiter user");
+
+
+    try {
+        
+        const cameras = await UserModel.findOne({emailId: req.params.emailId}, {
+            cameras : 1
+        }) 
+        res.status(200).send(cameras)        
+
+    } catch (error) {
+        res
+             .status(500)
+             .send(JSON.stringify({ message: "Something went wrong!", error }));
+ 
+    }
+ 
+}
 // the socket and rtsp camera details
 exports.liveFeed = async ( req, res ) => {
     // console.log("Inside resgiter user");
