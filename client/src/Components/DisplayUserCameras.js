@@ -12,7 +12,7 @@ function DisplayUserCameras() {
     const [cameraName, setCameraName] = useState();
 
     const getCameras = async()=>{
-        const cameraResponse = await fetch(`${API}/users/liveFeed/${JSON.parse(localStorage.getItem("jwt")).emailId}`, {
+        const cameraResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/users/getCameras/${JSON.parse(localStorage.getItem("jwt")).emailId}`, {
             method: "GET"
           })
             .then(response => {
@@ -24,7 +24,7 @@ function DisplayUserCameras() {
     }
 
     const deleteCamera = (cameraId)=>{
-        fetch(`${API}/users/deleteCamera/${JSON.parse(localStorage.getItem("jwt")).emailId}/${cameraId}`, {
+        fetch(`${process.env.REACT_APP_SERVER_URL}/users/deleteCamera/${JSON.parse(localStorage.getItem("jwt")).emailId}/${cameraId}`, {
             method: "DELETE"
           })
             .then(response => {

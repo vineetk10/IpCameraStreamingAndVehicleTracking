@@ -11,10 +11,11 @@ const AddIPCamera = () => {
     ip: "",
     name: "",
     error: "",
-    success: false
+    success: false,
+    isIp: false,
   });
 
-  const { ip, name, error, success } = values;
+  const { ip, name, isIp, error, success } = values;
 
   const handleChange = name => event => {
     setValues({ ...values, error: false, [name]: event.target.value });
@@ -23,7 +24,7 @@ const AddIPCamera = () => {
   const onSubmit = event => {
     event.preventDefault();
     setValues({ ...values, error: false });
-    addCamera({ ip: ip, name: name },)
+    addCamera({ ip: ip, name: name, isRTSP: isIp },)
       .then(data => {
         if (data.error) {
           setValues({ ...values, error: data.error, success: false });
@@ -72,7 +73,10 @@ const AddIPCamera = () => {
                 value={name}
               />
             </div>
-         
+            <div className="form-group">
+            <label className="text-secondary">Is IP?</label>
+            <input type="checkbox" onClick={()=>setValues({...values,isIp:!values.isIp})}></input>
+            </div>
             <button onClick={onSubmit} className="btn btn-primary w-100 rounded mt-2" type="button">Add IP Camera</button>  
             {/* <div onClick={RedirectToLogin}>Already have an account? Log in</div>  */}
           </form>
