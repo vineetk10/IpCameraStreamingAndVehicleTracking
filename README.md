@@ -11,5 +11,3 @@
 
 ## High-level design for handling video streams using Kafka Consumer/Producer mechanisms
 <img width="673" alt="image" src="https://user-images.githubusercontent.com/26499781/231993110-0a840ad3-f699-466d-a291-3b0b2a7d12b9.png">
-
-## Sequence Diagrams
