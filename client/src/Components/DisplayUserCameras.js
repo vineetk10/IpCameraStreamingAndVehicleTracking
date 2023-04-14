@@ -40,9 +40,9 @@ function DisplayUserCameras() {
 
   return (
     <>
-     <Table striped bordered hover>
+     <Table style={{position:'relative', top:'5rem'}} striped bordered hover>
           <thead>
-            <tr>
+            <tr style={{backgroundColor:'cornflowerblue'}}>
               <th>#</th>
               <th>IP</th>
               <th>Name</th>
@@ -52,7 +52,7 @@ function DisplayUserCameras() {
           </thead>
           <tbody>
             {cameras.map((camera,index)=>{
-              return  <tr>
+              return  <tr style={{backgroundColor:'azure'}}>
                  <td>{index}</td>
                  <td>{camera.ip}</td>
                  <td>{camera.name}</td>

@@ -1,16 +1,28 @@
 import React from 'react'
 import '../css/Header.css'
 import { signout, isAutheticated } from "../auth/authapicalls";
-import { Button } from 'react-bootstrap';
+import { Button, Container, Nav, Navbar } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
+import Avatar from 'react-avatar';
 
 function Header() {
+  const user = JSON.parse(localStorage.getItem("jwt"));
   const history = useHistory();
   return (
-    <div className='header'>
-      <div></div>
-      <div>Vehicle Tracking</div>
-       {isAutheticated() && (
+      
+      <Navbar bg="light" variant="light">
+         <span style={{marginLeft:'10px'}}>{isAutheticated() && <Avatar name={user.name} size="40"  round={true} />}</span>
+
+        <Container style={{backgroundColor:'aliceblue'}}>
+          {/* <Navbar.Brand href="#home">IP Camera Streaming & Vehcile Tracking</Navbar.Brand> */}
+          <Nav className="me-auto">
+            <Nav.Link href="stream">WebCam Live View</Nav.Link>
+            <Nav.Link href="#home">IP Cam Live View</Nav.Link>
+            <Nav.Link href="showRecordings">Playback</Nav.Link>
+            <Nav.Link href="#pricing">Query</Nav.Link>
+            
+          </Nav>
+          {isAutheticated() && (
               <Button
                 variant="light"
                 onClick={() => {
@@ -29,9 +41,11 @@ function Header() {
                 <Button onClick={() => history.push("/signup")}>Sign up</Button>
               </div>
             )}
+        </Container>
+      </Navbar>
       
       
-      </div>
+      
   )
 }
 
