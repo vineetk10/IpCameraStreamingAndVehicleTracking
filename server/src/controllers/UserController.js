@@ -94,6 +94,46 @@ exports.registerCamera = async ( req, res ) => {
 
 
 
+
+exports.refreshCamera = async ( req, res ) => {
+    console.log(req.body)
+    console.log(req.query.action)
+    console.log('user id: ', req.params.id)
+
+    const portInUse = webSocketUtils.checkPortInUse(req.body.port)
+
+    if (portInUse == false){
+        // restart connection
+        webSocketUtils.startStream(req.body, req.params.id)
+    }
+    else{
+        // compare both the camera name
+        const cameraSame = webSocketUtils.checkPortInUseHasSameCameraName(req.body.port, req.body.name)
+        if(cameraSame == true){
+            // stop and refresh the connection
+            webSocketUtils.restartStream(req.body, req.params.id);
+        }else{
+            // get new port for this camera and start the connection
+            const port = portsUtil.getPort()
+            // console.log("Port returned: ", port)
+            req.body.port = port;
+            // console.log("cameraSame: ", cameraSame, ' body: ', req.body);
+
+            webSocketUtils.startStream(req.body, req.params.id)
+
+        }
+        console.log("cameraSame: " , cameraSame)
+    }
+
+    // if response is false that is the same port is not in use can directly start the streaming, otherwise response is true check if cameraID is different, then the user sent, then only get a new port start process on that and update the DB with new port details, otherwise just stop the stream and start it again on the same port 
+    console.log("response")
+    return res;
+}
+
+
+
+
+
 exports.find = async (req, res) => {
 
     try{
@@ -198,6 +238,17 @@ exports.updateCamera = async ( req, res ) => {
 
 
     try {
+
+        // if camera type is IP then restart the stream
+
+            const camera = await UserModel.findOne({emailId: req.params.emailId, "cameras._id" : req.body._id}, { "cameras.$": 1 }).exec();
+            console.log('camera: ', camera)
+            if(camera.cameras[0].isRTSP == true){
+                console.log('Inside if: ', camera)
+                webSocketUtils.restartStream(camera.cameras[0], camera._id);
+            }
+            
+        //
         
         await UserModel.updateOne({emailId: req.params.emailId, "cameras._id" : req.body._id}, {
             $set : {

@@ -1,11 +1,11 @@
 // User Endpoints
 ###
-POST http://localhost:5000/users/register
+POST http://localhost:8000/users/register
 content-type: application/json
 
 {
     "name": "Vivek Joshi",
-    "emailId": "vivek.joshi17@sjsu.edu",
+    "emailId": "vivek.joshi117@sjsu.edu",
     "password": "password"
 }
 
@@ -21,14 +21,30 @@ GET http://localhost:5000/users/vivek.joshi17@sjsu.edu
 
 
 ###
-POST  http://localhost:5000/users/login
+POST  http://localhost:8000/users/login
 content-type: application/json
 
 {
    
     "emailId": "vivek.joshi17@sjsu.edu",
-    "password": "password"
+    "password": "password",
+    "ipAddress": ""
 }
+
+
+###
+POST http://localhost:8000/users/registerCamera/63e08cd02e597b0ed6ce32be
+content-type: application/json
+
+{
+    "ip" : "rtsp://admin:admin295@98.35.205.100:554/h264Preview_01_sub",
+    "name": "testingRTSP",
+    "session" : "sessiontesting2",
+    "connection": "connectiontesting2",
+    "token": "tokentesting2",
+    "isRTSP": true
+}
+
 
 
 ###
@@ -41,8 +57,37 @@ content-type: application/json
     "session" : "sessiontesting2",
     "connection": "connectiontesting2",
     "token": "tokentesting2",
-    "isRTSP": "true"
+    "isRTSP": true
 }
+
+
+# TO refresh the IP cameras
+###
+PUT http://localhost:8000/users/registerCamera/63e08cd02e597b0ed6ce32be?action=refresh
+content-type: application/json
+
+{
+    "_id": "64178c9a31e127c75db4404a",
+    "ip" : "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4",
+    "name": "testingRTSP",
+    "port": 50000,
+    "isRTSP": true
+}
+
+# TO stop the IP cameras
+###
+PUT http://localhost:8000/users/registerCamera/63e08cd02e597b0ed6ce32be?action=stop
+content-type: application/json
+
+{
+    "_id": "64178c9a31e127c75db4404a",
+    "ip" : "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4",
+    "name": "testingRTSP1",
+    "port": 50001,
+    "isRTSP": true
+}
+
+
 
 
 ###
@@ -52,11 +97,11 @@ DELETE  http://localhost:8000/users/deleteCamera/vivek.joshi17@sjsu.edu/6417f176
 
 
 ###
-PUT   http://localhost:5000/users/updateCamera/vivek.joshi17@sjsu.edu
+PUT   http://localhost:8000/users/updateCamera/admin@1234
 content-type: application/json
 
 {
-    "_id" : "63e0905b3aba378267b43e68",
+    "_id" : "64391fd564b194356219b005",
     "ip" : "rtsp://testing3",
     "name": "Vivek Joshi3"
 }

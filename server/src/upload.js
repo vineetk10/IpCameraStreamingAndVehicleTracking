@@ -163,5 +163,5 @@ function checkForNewVideos() {
 
 checkForNewVideos();
 
-setInterval(checkForNewVideos, 3 * 60 * 1000);
+setInterval(checkForNewVideos, 1 * 60 * 1000);
 module.exports = checkForNewVideos;

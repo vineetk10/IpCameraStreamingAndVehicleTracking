@@ -60,7 +60,7 @@ function startStream (req, userId) {
     });
 
     ffmpegProcess.stderr.on('data', (data) => {
-        // console.log(`FFmpeg stderr: ${data}`);
+         console.log(`FFmpeg stderr: ${data}`);
     });
 
     ffmpegProcess.on('exit', (code) => {
@@ -160,10 +160,44 @@ function pollSQSMessages(){
 }
 
 
+
+// to refresh camera, check if port is in user or not
+function checkPortInUse(port){
+    if (!streams[port]) {
+        console.log("PORT NOT IN USE ************** : ")
+        return false;
+    }
+    else{
+        console.log("checkPortInUse IN USE ************** : " , streams[port].stream.name)
+        return true;
+    }
+}
+
+
+// to refresh camera, check if camera name is same
+function checkPortInUseHasSameCameraName(port, name){
+    if (!streams[port]) {
+        console.log("PORT NOT IN USE ************** : ")
+        return false;
+    }
+    else{
+        console.log("checkPortInUseHasSameCameraName IN USE ************** : " , streams[port].stream.name)
+        return (name === streams[port].stream.name);
+    }
+}
+
+
+function restartStream(req, userId){
+    stopStream(req.port);
+    startStream(req, userId);
+
+}
+
+
 pollSQSMessages();
 
 // Schedule receiveMessages to run every 5 minutes (300000 ms)
-setInterval(pollSQSMessages, 5*60*1000);
+setInterval(pollSQSMessages, 1*60*1000);
 
 
-module.exports = { startStream, stopStream };
+module.exports = { startStream, stopStream, checkPortInUse, checkPortInUseHasSameCameraName, restartStream };
