@@ -135,7 +135,13 @@ function pollSQSMessages(){
             // move the output file to the uploads directory
             const outputDir = path.join(__dirname, 'rtspUploads');        
             const sourcePath = path.join(outputDir, messageBody.outputFile);
-            const destPath = sourcePath.replace('/src/rtsp/rtspUploads/', '/uploads/');
+
+            // const destPath = sourcePath.replace('/src/rtsp/rtspUploads/', '/uploads/');
+
+
+            const updatedFileName = messageBody.outputFile.replace('.mp4', `_${Date.now()}.mp4`); // replace with your desired file name
+            const destPath = path.join(__dirname, '..', '..', 'uploads', updatedFileName);
+
 
             fs.rename(sourcePath, destPath, (err) => {
                 if (err) {
@@ -197,7 +203,7 @@ function restartStream(req, userId){
 pollSQSMessages();
 
 // Schedule receiveMessages to run every 5 minutes (300000 ms)
-setInterval(pollSQSMessages, 1*60*1000);
+setInterval(pollSQSMessages, 5*60*1000);
 
 
 module.exports = { startStream, stopStream, checkPortInUse, checkPortInUseHasSameCameraName, restartStream };

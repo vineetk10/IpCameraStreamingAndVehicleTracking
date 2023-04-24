@@ -34,6 +34,7 @@ const StreamCameras = () => {
       });
 
       let chunks = [];
+     
       // let totalSize = 0;
       const CHUNK_SIZE = 30;  // each chunk is of 50 KBs, so each file would be aroung 400-500 KBs and contain 10 second video, we can change it to have 30 mins videos
       const mediaRecorderOptions = {
@@ -41,6 +42,9 @@ const StreamCameras = () => {
         timeslice: 50000 // 50 KB
       };
       const recorder = new MediaRecorder(localStream, mediaRecorderOptions);
+
+      // testing to add the start date in the file name
+      let startDate = Date.now()
       recorder.start(1000);
       
       recorder.ondataavailable = (event) => {
@@ -61,7 +65,7 @@ const StreamCameras = () => {
         // send counter in file name to verify
 
 
-        var fileName = user.id + '_' + user.name + '_' + Date.now() + '.webm' ;
+        var fileName = user.id + '_' + user.name + '_' + startDate + '_' + Date.now() + '.webm' ;
         // totalSize+= 1;
         formData.append('file', blob, fileName);
         xhr.open('POST', BACKEND_SERVER_URL + '/upload', true);
@@ -71,6 +75,7 @@ const StreamCameras = () => {
           }
         };
         xhr.send(formData);
+        startDate = Date.now()
         recorder.start(1000);
       };
       

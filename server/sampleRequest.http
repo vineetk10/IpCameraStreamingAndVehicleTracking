@@ -46,6 +46,35 @@ content-type: application/json
 }
 
 
+# ssh -i "295-backend.pem" ubuntu@ec2-54-190-19-109.us-west-2.compute.amazonaws.comls
+
+###
+POST http://54.190.19.109:8080/users/registerCamera/63e08cd02e597b0ed6ce32be
+content-type: application/json
+
+{
+    "ip" : "rtsp://admin:admin295@98.35.205.100:554/h264Preview_01_sub",
+    "name": "testingRTSP",
+    "session" : "sessiontesting2",
+    "connection": "connectiontesting2",
+    "token": "tokentesting2",
+    "isRTSP": true
+}
+
+
+# On EC2 instance
+###
+POST http://54.190.19.109:8080/users/registerCamera/63e08cd02e597b0ed6ce32be
+content-type: application/json
+
+{
+    "ip" : "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4",
+    "name": "testingRTSP",
+    "session" : "sessiontesting2",
+    "connection": "connectiontesting2",
+    "token": "tokentesting2",
+    "isRTSP": true
+}
 
 ###
 POST http://localhost:8000/users/registerCamera/63e08cd02e597b0ed6ce32be

@@ -82,24 +82,29 @@ function uploadVideo(videoPath) {
 
        
         console.log('TimeStamp: ', Date.now())
-        console.log('videoEnd: ', individualDetails[2])
-        var videoEnd = new Date(parseInt(individualDetails[2]))
+        console.log('videoStart: ', individualDetails[2])
+        console.log('videoEnd: ', individualDetails[3])
+        var videoEnd = new Date(parseInt(individualDetails[3]))
         var videoStart = new Date(parseInt(individualDetails[2]))
-        videoStart.setSeconds(videoStart.getSeconds() - length)
+       // videoStart.setSeconds(videoStart.getSeconds() - length)
         videoEnd = videoEnd.toISOString()
         videoStart = videoStart.toISOString()
-        var videoStartPST = videoStart.replace('Z', '-08:00')
-        var videoEndPST = videoEnd.replace('Z', '-08:00')
+        // var videoStartPST = videoStart.replace('Z', '-08:00')
+        // var videoEndPST = videoEnd.replace('Z', '-08:00')
         // console.log(videoStartPST)
         // console.log(videoEndPST)
         var userId = individualDetails[0]
+
+        // testing to see if able to get the startdate from the file name
+        var duration = videoEnd - videoStart;
+
         
         var req = {
           cameraName: individualDetails[1],
           name: individualPath,
-          startDate: videoStartPST,
-          endDate: videoEndPST,
-          duration : length,
+          startDate: videoStart,
+          endDate: videoEnd,
+          duration : duration,
           s3URI: s3URI
          }
          console.log('Before Recording ************************************ ', userId)
@@ -163,5 +168,5 @@ function checkForNewVideos() {
 
 checkForNewVideos();
 
-setInterval(checkForNewVideos, 1 * 60 * 1000);
+setInterval(checkForNewVideos, 5 * 60 * 1000);
 module.exports = checkForNewVideos;
