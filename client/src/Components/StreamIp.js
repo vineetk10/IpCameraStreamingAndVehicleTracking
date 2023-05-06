@@ -5,6 +5,8 @@ import io from 'socket.io-client';
 import Video from './Video';
 import { WebRTCUser } from './types';
 import Header from './Header';
+import "../css/Cards.css";
+
 const user = JSON.parse(localStorage.getItem("jwt"));
 
 const pc_config = {
@@ -66,6 +68,7 @@ const StreamCameras = () => {
 
 
         var fileName = user.id + '_' + user.name + '_' + startDate + '_' + Date.now() + '.webm' ;
+        // var fileName = user.id + '_' + user.name + '_' + Date.now() + '.webm' ;
         // totalSize+= 1;
         formData.append('file', blob, fileName);
         xhr.open('POST', BACKEND_SERVER_URL + '/upload', true);
@@ -257,9 +260,13 @@ const StreamCameras = () => {
         autoPlay
       /> */}
     <Header/>
+    <div className="row" id="cards">
       {users.map((user, index) => (
+        // <div style={{marginLeft:'2rem'}} key={index} className="col-4 mb-4">
         <Video key={index} email={user.name} stream={user.stream} muted={true}/>
+        // </div>   
       ))}
+      </div>
     </div>
   );
 };

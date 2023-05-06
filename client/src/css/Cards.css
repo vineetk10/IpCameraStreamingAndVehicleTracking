@@ -1,0 +1,15 @@
+
+#cards{
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-content: start;
+    background-color: cornflowerblue;
+    height: 100vh;
+  }
+
+  @media (max-width:48rem){
+    #cards{
+      flex-direction: column;
+    }
+  }

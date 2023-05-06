@@ -4,22 +4,23 @@ import styled from 'styled-components';
 const Container = styled.div`
 	position: relative;
 	display: inline-block;
-	width: 240px;
-	height: 270px;
-	margin: 5px;
+	
 `;
-
 const VideoContainer = styled.video`
-	width: 240px;
-	height: 240px;
-	background-color: black;
+	width: 100%;
+	height: 100%;
+	margin: 10px;
+	border: 1px solid lightgray;
 `;
 
 const UserLabel = styled.p`
 	display: inline-block;
 	position: absolute;
-	top: 230px;
-	left: 0px;
+	bottom: 10px;
+	left: 1.5rem;
+	font-size: 1.2rem;
+	color: black;
+	font-family: cursive;
 `;
 
 // interface Props {
@@ -38,10 +39,11 @@ const Video = ({ email, stream, muted }) => {
 	}, [stream, muted]);
 
 	return (
-		<Container>
-			<VideoContainer ref={ref} muted={isMuted} autoPlay />
+		<Container  style={{ width: '100%' }}>
+			<VideoContainer  ref={ref} muted={isMuted} autoPlay />
 			<UserLabel>{email}</UserLabel>
-		</Container>
+	  </Container>
+		
 	);
 };
 
