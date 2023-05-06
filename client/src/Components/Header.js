@@ -17,7 +17,7 @@ function Header() {
           {/* <Navbar.Brand href="#home">IP Camera Streaming & Vehcile Tracking</Navbar.Brand> */}
           <Nav className="me-auto">
             <Nav.Link href="stream">WebCam Live View</Nav.Link>
-            <Nav.Link href="#home">IP Cam Live View</Nav.Link>
+            <Nav.Link href="ipcamstream">IP Cam Live View</Nav.Link>
             <Nav.Link href="showRecordings">Playback</Nav.Link>
             <Nav.Link href="#pricing">Query</Nav.Link>
             

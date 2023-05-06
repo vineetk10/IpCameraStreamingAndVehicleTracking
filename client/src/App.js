@@ -9,10 +9,10 @@ import AddIPCamera from './Components/AddIPCamera';
 import OpenViduReact from './Components/OpenViduReact';
 import React from 'react';
 import Recordings from './Components/Recordings';
+import IpCameraStreaming from './Components/IpCameraStreaming';
 function App() {
   return (
     <div className="App">
-       
         <Router>
         <Switch>
           <Route exact path="/">
@@ -35,6 +35,9 @@ function App() {
           </Route>
           <Route exact path="/showRecordings">
               <Recordings/>
+          </Route>
+          <Route exact path="/ipcamstream">
+              <IpCameraStreaming/>
           </Route>
         </Switch>
       </Router>
