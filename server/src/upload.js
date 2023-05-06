@@ -84,11 +84,14 @@ function uploadVideo(videoPath) {
         console.log('TimeStamp: ', Date.now())
         console.log('videoStart: ', individualDetails[2])
         console.log('videoEnd: ', individualDetails[3])
-        var videoEnd = new Date(parseInt(individualDetails[3]))
-        var videoStart = new Date(parseInt(individualDetails[2]))
+        //var videoEnd = new Date(parseInt(individualDetails[3]))
+        //var videoStart = new Date(parseInt(individualDetails[2]))
        // videoStart.setSeconds(videoStart.getSeconds() - length)
-        videoEnd = videoEnd.toISOString()
-        videoStart = videoStart.toISOString()
+        var videoEnd1 = new Date(parseInt(individualDetails[3]))
+        var videoStart1 = new Date(parseInt(individualDetails[2]))
+       // videoStart.setSeconds(videoStart.getSeconds() - length)
+        videoEnd = videoEnd1.toISOString()
+        videoStart = videoStart1.toISOString()
         // var videoStartPST = videoStart.replace('Z', '-08:00')
         // var videoEndPST = videoEnd.replace('Z', '-08:00')
         // console.log(videoStartPST)
@@ -96,7 +99,9 @@ function uploadVideo(videoPath) {
         var userId = individualDetails[0]
 
         // testing to see if able to get the startdate from the file name
-        var duration = videoEnd - videoStart;
+        // var duration = videoEnd - videoStart;
+        var duration = videoEnd1.getTime() - videoStart1.getTime();
+        var durationInSeconds = Math.floor(duration / 1000);
 
         
         var req = {
@@ -104,9 +109,10 @@ function uploadVideo(videoPath) {
           name: individualPath,
           startDate: videoStart,
           endDate: videoEnd,
-          duration : duration,
+          duration : durationInSeconds,
           s3URI: s3URI
          }
+
          console.log('Before Recording ************************************ ', userId)
          userController.saveRecording(req, userId)
          console.log('After Recording ************************************ ')
