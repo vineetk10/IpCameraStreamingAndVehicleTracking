@@ -31,18 +31,21 @@ function Recordings() {
   return (
     <div>
          <Header/>
-         {
-            recordings && recordings.recordings.map((recording)=>{
-                const url = s3.getSignedUrl('getObject', {
-                    Bucket: process.env.REACT_APP_S3_BucketName,
-                    Key: recording.name+".mp4",
-                    Expires: 3600 
-                });
-               return <video controls style={{height:'25%', width:'25%', margin:'5%'}}>
-                    <source src={url} type="video/mp4"/>
-                </video>
-            })
-         }
+         <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', backgroundColor: 'cornflowerblue'}}>
+            {
+                recordings && recordings.recordings.map((recording)=>{
+                    const url = s3.getSignedUrl('getObject', {
+                        Bucket: process.env.REACT_APP_S3_BucketName,
+                        Key: recording.name+".mp4",
+                        Expires: 3600 
+                    });
+                  return <video controls style={{height:'100%', width:'90%', margin:'1rem'}}>
+                        <source src={url} type="video/mp4"/>
+                    </video>
+                })
+            }
+         </div>
+         
         
 
       {/* {users.map((user, index) => (
