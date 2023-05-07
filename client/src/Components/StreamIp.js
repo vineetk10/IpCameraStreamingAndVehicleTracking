@@ -67,7 +67,7 @@ const StreamCameras = () => {
         // send counter in file name to verify
 
 
-        var fileName = user.id + '_' + user.name + '_' + startDate + '_' + Date.now() + '.webm' ;
+        var fileName = user.id + '_' + user.name + '_' + startDate + '_' + Date.now()  + '_webcam.webm' ;
         // var fileName = user.id + '_' + user.name + '_' + Date.now() + '.webm' ;
         // totalSize+= 1;
         formData.append('file', blob, fileName);
