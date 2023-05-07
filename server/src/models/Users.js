@@ -42,7 +42,8 @@ const UserSchema = new mongoose.Schema({
             startDate: Date,
             endDate: Date,
             duration: Number,
-            s3URI:String
+            s3URI:String,
+            videoType: String
         }
     ],
     queries: [{
