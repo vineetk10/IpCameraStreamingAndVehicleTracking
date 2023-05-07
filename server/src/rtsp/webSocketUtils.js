@@ -93,83 +93,99 @@ function startStream (req, userId) {
 
 
 function stopStream (port){
-        
-    if (streams[port]) {
 
-        const { stream, ffmpegProcess, outputPath} = streams[port];
-        stream.stop();
-        ffmpegProcess.kill();
-        streams[port] = null;
-            // startStream(key = 'stream', url, port);
-        console.log('INSIDE function stopStream (port)')
+    try{
+        if (streams[port]) {
+
+            const { stream, ffmpegProcess, outputPath} = streams[port];
+            stream.stop();
+            ffmpegProcess.kill();
+            streams[port] = null;
+                // startStream(key = 'stream', url, port);
+            console.log('INSIDE function stopStream (port)')
+        }
+        return Promise.resolve('Stream stopped');
     }
-    return Promise.resolve('Stream stopped');
+    catch(err){
+        console.log('Error function stopStream (port): ', err)
+    }
+        
+
     // will be used in receive message        
 }
 
 
 function pollSQSMessages(){
 
-    sqsUtils.receiveMessage((err, messages) => {
-        if (err) {
-            console.log('Error receiving messages:', err);
-        } else {
-            console.log('Polled', messages.length);
-            messages.forEach(message => {
-            // Extract the URL and timestamp from the message
-            // console.log("MESSAGE ************** : ", message)
-            const messageBody = JSON.parse(message.Body);
-            const receipt = message.ReceiptHandle;
+    try{
 
-            console.log("MESSAGE ************** : ", messageBody)
-            console.log("receipt ************** : ", receipt)
-
-            const port = messageBody.port
-            if (!streams[port]) {
-                console.log("PORT NOT IN USE ************** : ")
-                stopStream(messageBody.port)
-            }
-            else{
-                console.log("PORT STILL IN USE ************** : ")
-                // stop the stream
-                stopStream(messageBody.port)
-                // restart the stream
-                startStream(messageBody, messageBody.userId)
-            }
-
-            // delete the message
-            sqsUtils.deleteMessage(receipt)
-
-            // move the output file to the uploads directory
-            const outputDir = path.join(__dirname, 'rtspUploads');        
-            const sourcePath = path.join(outputDir, messageBody.outputFile);
-
-            // const destPath = sourcePath.replace('/src/rtsp/rtspUploads/', '/uploads/');
-
-
-            const updatedFileName = messageBody.outputFile.replace('.mp4', `_${Date.now()}.mp4`); // replace with your desired file name
-            const destPath = path.join(__dirname, '..', '..', 'uploads', updatedFileName);
-
-
-            fs.rename(sourcePath, destPath, (err) => {
-                if (err) {
-                    console.error(err);
-                } else {
-                    console.log('File moved successfully!');
-                    // fs.unlink(sourcePath, (err) => {
-                    // if (err) {
-                    //     console.error(err);
-                    // } else {
-                    //     console.log('Original file deleted successfully!');
-                    // }
-                    // });
+        sqsUtils.receiveMessage((err, messages) => {
+            if (err) {
+                console.log('Error receiving messages:', err);
+            } else {
+                console.log('Polled', messages.length);
+                messages.forEach(message => {
+                // Extract the URL and timestamp from the message
+                // console.log("MESSAGE ************** : ", message)
+                const messageBody = JSON.parse(message.Body);
+                const receipt = message.ReceiptHandle;
+    
+                console.log("MESSAGE ************** : ", messageBody)
+                console.log("receipt ************** : ", receipt)
+    
+                const port = messageBody.port
+                if (!streams[port]) {
+                    console.log("PORT NOT IN USE ************** : ")
+                    stopStream(messageBody.port)
                 }
-            });
+                else{
+                    console.log("PORT STILL IN USE ************** : ")
+                    // stop the stream
+                    stopStream(messageBody.port)
+                    // restart the stream
+                    startStream(messageBody, messageBody.userId)
+                }
+    
+                // delete the message
+                sqsUtils.deleteMessage(receipt)
+    
+                // move the output file to the uploads directory
+                const outputDir = path.join(__dirname, 'rtspUploads');        
+                const sourcePath = path.join(outputDir, messageBody.outputFile);
+    
+                // const destPath = sourcePath.replace('/src/rtsp/rtspUploads/', '/uploads/');
+    
+    
+                const updatedFileName = messageBody.outputFile.replace('.mp4', `_${Date.now()}.mp4`); // replace with your desired file name
+                const destPath = path.join(__dirname, '..', '..', 'uploads', updatedFileName);
+    
+    
+                fs.rename(sourcePath, destPath, (err) => {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        console.log('File moved successfully!');
+                        // fs.unlink(sourcePath, (err) => {
+                        // if (err) {
+                        //     console.error(err);
+                        // } else {
+                        //     console.log('Original file deleted successfully!');
+                        // }
+                        // });
+                    }
+                });
+    
+    
+                })
+            }
+        });
 
 
-            })
-        }
-    });
+    }
+    catch(err){
+        console.log('Error in function pollSQSMessages(): ', err)
+    }
+
    
 }
 

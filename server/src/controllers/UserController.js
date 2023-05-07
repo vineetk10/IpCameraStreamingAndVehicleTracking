@@ -106,12 +106,15 @@ exports.refreshCamera = async ( req, res ) => {
         // restart connection
         console.log('line 107')
         webSocketUtils.startStream(req.body, req.params.id)
+        webSocketUtils.engagePort(req.body.port)
+
+        // remove this port from available ports list
     }
     else{
         // compare both the camera name
         console.log('line 112')
         try{
-            
+
         const cameraSame = webSocketUtils.checkPortInUseHasSameCameraName(req.body.port, req.body.name)
 
             
@@ -128,9 +131,9 @@ exports.refreshCamera = async ( req, res ) => {
 
                 webSocketUtils.startStream(req.body, req.params.id)
                 console.log('line 132')
-
+                console.log("cameraSame: " , cameraSame)
             }
-            console.log("cameraSame: " , cameraSame)
+            
         }
         catch(err){
         console.log('Error in refreshCamera, line 117, error: ', err)
@@ -139,7 +142,7 @@ exports.refreshCamera = async ( req, res ) => {
 
     // if response is false that is the same port is not in use can directly start the streaming, otherwise response is true check if cameraID is different, then the user sent, then only get a new port start process on that and update the DB with new port details, otherwise just stop the stream and start it again on the same port 
     console.log("response")
-    return res;
+    return res.status(200).send("Refresh done successfully");
 }
 
 

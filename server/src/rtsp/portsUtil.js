@@ -36,3 +36,14 @@ exports.releasePort = (port) => {
     }
     
 }
+
+
+exports.engagePort = (port) => {
+    
+    if  (available_ports.indexOf(port) > -1){
+        let index = available_ports.indexOf(port);
+        available_ports.splice(index, 1)
+        used_ports.push(port)
+    }
+    
+}
