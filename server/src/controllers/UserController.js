@@ -132,6 +132,15 @@ exports.refreshCamera = async ( req, res ) => {
                 webSocketUtils.startStream(req.body, req.params.id)
                 console.log('line 132')
                 console.log("cameraSame: " , cameraSame)
+
+                // update new port details in camera
+
+                await UserModel.updateOne({_id: req.params.id, "cameras._id" : req.body._id}, {
+                    $set : {
+                        "cameras.$.port": port
+                    }
+                }) 
+                
             }
             
         }
@@ -142,7 +151,7 @@ exports.refreshCamera = async ( req, res ) => {
 
     // if response is false that is the same port is not in use can directly start the streaming, otherwise response is true check if cameraID is different, then the user sent, then only get a new port start process on that and update the DB with new port details, otherwise just stop the stream and start it again on the same port 
     console.log("response")
-    return res.status(200).send("Refresh done successfully");
+    res.send(JSON.stringify({Response: "Camera Refreshed successfully with new port"}));
 }
 
 
