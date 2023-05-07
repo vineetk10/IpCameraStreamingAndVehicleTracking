@@ -13,7 +13,7 @@ export default class JsmpegPlayer extends Component {
   render() {
     return (
       <div
-        style={{height:'50%', margin:'1rem'}}
+        style={{height:'50%', margin:'1rem', border: '1px solid lightgray'}}
         className={this.props.wrapperClassName}
         ref={videoWrapper => this.els.videoWrapper = videoWrapper}>
       </div>
