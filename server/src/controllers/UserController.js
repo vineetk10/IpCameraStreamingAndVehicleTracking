@@ -106,7 +106,7 @@ exports.refreshCamera = async ( req, res ) => {
         // restart connection
         console.log('line 107')
         webSocketUtils.startStream(req.body, req.params.id)
-        webSocketUtils.engagePort(req.body.port)
+        portsUtil.engagePort(req.body.port)
 
         // remove this port from available ports list
     }
