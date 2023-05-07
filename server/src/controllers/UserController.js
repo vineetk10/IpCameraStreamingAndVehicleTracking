@@ -111,28 +111,30 @@ exports.refreshCamera = async ( req, res ) => {
         // compare both the camera name
         console.log('line 112')
         try{
-           const cameraSame = webSocketUtils.checkPortInUseHasSameCameraName(req.body.port, req.body.name)
-        }
-       catch(err){
-          console.log('Error in refreshCamera, line 117, error: ', err)
-       }
-        
-        if(cameraSame == true){
-            // stop and refresh the connection
-            webSocketUtils.restartStream(req.body, req.params.id);
-            console.log('line 123')
-        }else{
-            // get new port for this camera and start the connection
-            const port = portsUtil.getPort()
-            // console.log("Port returned: ", port)
-            req.body.port = port;
-            // console.log("cameraSame: ", cameraSame, ' body: ', req.body);
+            
+        const cameraSame = webSocketUtils.checkPortInUseHasSameCameraName(req.body.port, req.body.name)
 
-            webSocketUtils.startStream(req.body, req.params.id)
-            console.log('line 132')
+            
+            if(cameraSame == true){
+                // stop and refresh the connection
+                webSocketUtils.restartStream(req.body, req.params.id);
+                console.log('line 123')
+            }else{
+                // get new port for this camera and start the connection
+                const port = portsUtil.getPort()
+                // console.log("Port returned: ", port)
+                req.body.port = port;
+                // console.log("cameraSame: ", cameraSame, ' body: ', req.body);
 
+                webSocketUtils.startStream(req.body, req.params.id)
+                console.log('line 132')
+
+            }
+            console.log("cameraSame: " , cameraSame)
         }
-        console.log("cameraSame: " , cameraSame)
+        catch(err){
+        console.log('Error in refreshCamera, line 117, error: ', err)
+        }
     }
 
     // if response is false that is the same port is not in use can directly start the streaming, otherwise response is true check if cameraID is different, then the user sent, then only get a new port start process on that and update the DB with new port details, otherwise just stop the stream and start it again on the same port 
