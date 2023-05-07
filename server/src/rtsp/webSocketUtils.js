@@ -10,76 +10,84 @@ const streams = {};
 
 function startStream (req, userId) {
 
-    const name = req.name
-    const streamUrl = req.ip
-    const wsPort = req.port
-    const stream = new Stream({
-        name,
-        streamUrl,
-        wsPort,
-        ffmpegOptions: {
-          '-stats': '',
-          '-r': 30,
-        },
-    });
+    try{
 
-    const outputDir = path.join(__dirname, 'rtspUploads');
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir);
+        console.log('line 13 startStream: ', req)
+
+        const name = req.name
+        const streamUrl = req.ip
+        const wsPort = req.port
+        const stream = new Stream({
+            name,
+            streamUrl,
+            wsPort,
+            ffmpegOptions: {
+            '-stats': '',
+            '-r': 30,
+            },
+        });
+
+        const outputDir = path.join(__dirname, 'rtspUploads');
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir);
+        }
+        const startTimestamp = Date.now();
+
+        const outputFile = `${userId}_${name}_${startTimestamp}.mp4`
+
+        const outputPath = path.join(outputDir, outputFile);
+        // const outputPath = path.join(outputDir, `${userId}_${name}_${startTimestamp}.mp4`);
+
+        const ffmpegArgs = [
+            '-i',
+            streamUrl,
+            '-codec',
+            'copy',
+            '-s',
+            '1280x720', // set desired resolution
+            '-f',
+            'mp4',
+            outputPath,
+        ];
+
+        const ffmpegProcess = spawn('ffmpeg', ffmpegArgs);
+
+        streams[wsPort] = {
+            stream: stream,
+            ffmpegProcess: ffmpegProcess,
+            outputPath: outputPath,
+        };
+
+        stream.on('start', () => {
+            console.log(`Stream started on port ${wsPort}`);
+
+        });
+
+        ffmpegProcess.stderr.on('data', (data) => {
+            console.log(`FFmpeg stderr: ${data}`);
+        });
+
+        ffmpegProcess.on('exit', (code) => {
+            console.log(`FFmpeg exited with code ${code}`);
+        });
+
+        const message = {
+            name : name,
+            ip: streamUrl,
+            port: wsPort,
+            userId: userId,
+            outputFile: outputFile,
+            outputPath: outputPath,
+            timestamp: startTimestamp
+        }
+
+        console.log('INSIDE function startStream')
+        // send a message to SQS
+        sqsUtils.sendMessage(message)
     }
-    const startTimestamp = Date.now();
-
-    const outputFile = `${userId}_${name}_${startTimestamp}.mp4`
-
-    const outputPath = path.join(outputDir, outputFile);
-    // const outputPath = path.join(outputDir, `${userId}_${name}_${startTimestamp}.mp4`);
-
-    const ffmpegArgs = [
-        '-i',
-        streamUrl,
-        '-codec',
-        'copy',
-        '-s',
-        '1280x720', // set desired resolution
-        '-f',
-        'mp4',
-        outputPath,
-    ];
-
-    const ffmpegProcess = spawn('ffmpeg', ffmpegArgs);
-
-    streams[wsPort] = {
-        stream: stream,
-        ffmpegProcess: ffmpegProcess,
-        outputPath: outputPath,
-    };
-
-    stream.on('start', () => {
-        console.log(`Stream started on port ${wsPort}`);
-
-    });
-
-    ffmpegProcess.stderr.on('data', (data) => {
-         console.log(`FFmpeg stderr: ${data}`);
-    });
-
-    ffmpegProcess.on('exit', (code) => {
-        console.log(`FFmpeg exited with code ${code}`);
-    });
-
-    const message = {
-        name : name,
-        ip: streamUrl,
-        port: wsPort,
-        userId: userId,
-        outputFile: outputFile,
-        outputPath: outputPath,
-        timestamp: startTimestamp
+    catch(err){
+        console.log('Error in function startStream (req, userId) : ', err)
     }
-
-    console.log('INSIDE function startStream')
-    // send a message to SQS
-    sqsUtils.sendMessage(message)
 
 }
 
