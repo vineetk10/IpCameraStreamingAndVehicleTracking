@@ -143,4 +143,9 @@ GET   http://localhost:8000/users/liveFeed/vivek.joshi17@sjsu.edu
 GET   http://localhost:8000/users/recordings/63e588d81a45d5ed13627138
 
 ###
-GET   http://localhost:8000/users/recordings/63e588d81a45d5ed13627138?name=
+# To get all the requests for a user, pass the _id
+GET   http://localhost:8080/users/queries/63e08cd02e597b0ed6ce32be
+
+###
+# TO delete a particular message_id or request, pass the _id/message_id
+DELETE   http://localhost:8080/users/queries/63e08cd02e597b0ed6ce32be/9829312731732_2738213

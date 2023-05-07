@@ -61,4 +61,10 @@ router.post("/login", userController.login);
 // Fetch the recordings for a user
 router.get("/recordings/:id", userController.fetchRecordings);
 
+// Fetch the queries for a user, based on _id
+router.get("/queries/:id", userController.fetchQueries);
+
+// Delete the queries for a user, based on _id
+router.delete("/queries/:id/:query_id", userController.deleteQuery);
+
 module.exports = router;

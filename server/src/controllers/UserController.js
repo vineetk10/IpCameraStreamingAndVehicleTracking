@@ -371,3 +371,39 @@ exports.fetchRecordings= async (req, res) => {
         console.log("Inside fetchRecordings : " + err);
     }
 }
+
+
+exports.fetchQueries= async (req, res) => {
+    try{
+      
+        console.log(req.params.id)
+        const results = await UserModel.findOne({_id: req.params.id }, {queries:1})
+        console.log(results)
+        res.status(200).send(results)
+        
+    }
+    catch(err){
+        console.log("Inside fetchQueries : " + err);
+    }
+}
+
+
+exports.deleteQuery= async (req, res) => {
+    try{
+      
+        await UserModel.updateOne({_id: req.params.id}, {
+            $pull : {
+                queries:{
+                    message_id : req.params.query_id
+                }                  
+            }
+        }) 
+        res.send(JSON.stringify({Response: "Request Deleted successfully"}));
+        
+    }
+    catch(err){
+        console.log("Inside fetchQueries : " + err);
+    }
+}
+
+

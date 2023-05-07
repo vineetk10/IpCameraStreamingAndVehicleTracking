@@ -44,8 +44,33 @@ const UserSchema = new mongoose.Schema({
             duration: Number,
             s3URI:String
         }
-    ]
+    ],
+    queries: [{
+        message_id: String,
+        input_url: String,
+        received_timestamp: Date,
+        status: String,
+        query_type: String,
+        finished_timestamp: Date,
+        output_url: String
+    }],
+    
 });
+
+// ,
+//     queries : [
+//         {
+//             message_id: String,
+//             input_url: String,
+            
+//             received_timestamp: Date,
+//             status: String,
+//             type: String,
+//             finished_timestamp: Date,
+//             output_url: String
+ 
+//         }
+//     ]
 
   
 
