@@ -18,8 +18,7 @@ function Header() {
           <Nav className="me-auto">
             <Nav.Link href="stream">WebCam Live View</Nav.Link>
             <Nav.Link href="ipcamstream">IP Cam Live View</Nav.Link>
-            <Nav.Link href="showRecordings">Playback</Nav.Link>
-            <Nav.Link href="#pricing">Query</Nav.Link>
+            <Nav.Link href="showRecordings">Playback/Query</Nav.Link>
             
           </Nav>
           {isAutheticated() && (
