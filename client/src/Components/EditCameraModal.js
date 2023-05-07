@@ -3,22 +3,23 @@ import { Modal, Button } from 'react-bootstrap'
 import { API } from "../backend";
 
 function EditCameraModal({show, cameraId,cameraIp, cameraName, handleClose}) {
-    const [values, setValues] = useState({
-        ip: cameraIp,
-        name: cameraName,
-        error: "",
-        success: false
-      });
-    
-      const { ip, name, error, success } = values;
-    
-      const handleChange = name => event => {
-        setValues({ ...values, error: false, [name]: event.target.value });
-      };
 
+      const [ip, setIp] = useState(cameraIp);
+      const [name, setName] = useState(cameraName);
+     
+
+      const handleNameChange = (event) => {
+        setName(event.target.value);
+      }
+    
+      const handleIpChange = (event) => {
+        setIp(event.target.value);
+      }
+
+      
       const onSubmit = event => {
         event.preventDefault();
-        setValues({ ...values, error: false });
+        // setValues({ ip, ...values, error: false });
         return fetch(`${API}/users/updateCamera/${JSON.parse(localStorage.getItem("jwt")).emailId}`, {
             method: "PUT",
             headers: {
@@ -42,7 +43,7 @@ function EditCameraModal({show, cameraId,cameraIp, cameraName, handleClose}) {
               <label className="text-secondary">Enter IP Address</label>
               <input
                 className="form-control"
-                onChange={handleChange("ip")}
+                onChange={handleIpChange}
                 type="text"
                 value={ip}
               />
@@ -52,7 +53,7 @@ function EditCameraModal({show, cameraId,cameraIp, cameraName, handleClose}) {
               <label className="text-secondary">Name</label>
               <input
                 className="form-control"
-                onChange={handleChange("name")}
+                onChange={handleNameChange}
                 type="name"
                 value={name}
               />
