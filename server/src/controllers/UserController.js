@@ -104,14 +104,23 @@ exports.refreshCamera = async ( req, res ) => {
 
     if (portInUse == false){
         // restart connection
+        console.log('line 107')
         webSocketUtils.startStream(req.body, req.params.id)
     }
     else{
         // compare both the camera name
-        const cameraSame = webSocketUtils.checkPortInUseHasSameCameraName(req.body.port, req.body.name)
+        console.log('line 112')
+        try{
+           const cameraSame = webSocketUtils.checkPortInUseHasSameCameraName(req.body.port, req.body.name)
+        }
+       catch(err){
+          console.log('Error in refreshCamera, line 117, error: ', err)
+       }
+        
         if(cameraSame == true){
             // stop and refresh the connection
             webSocketUtils.restartStream(req.body, req.params.id);
+            console.log('line 123')
         }else{
             // get new port for this camera and start the connection
             const port = portsUtil.getPort()
@@ -120,6 +129,7 @@ exports.refreshCamera = async ( req, res ) => {
             // console.log("cameraSame: ", cameraSame, ' body: ', req.body);
 
             webSocketUtils.startStream(req.body, req.params.id)
+            console.log('line 132')
 
         }
         console.log("cameraSame: " , cameraSame)
