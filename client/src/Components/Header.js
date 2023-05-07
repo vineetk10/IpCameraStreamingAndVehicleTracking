@@ -19,7 +19,7 @@ function Header() {
             <Nav.Link href="stream">WebCam Live View</Nav.Link>
             <Nav.Link href="ipcamstream">IP Cam Live View</Nav.Link>
             <Nav.Link href="showRecordings">Playback/Query</Nav.Link>
-            
+            <Nav.Link href="status">Request Status</Nav.Link>
           </Nav>
           {isAutheticated() && (
               <Button

@@ -10,7 +10,7 @@ function DisplayUserCameras() {
     const [cameraId, setCameraId] = useState();
     const [cameraIp, setCameraIp] = useState();
     const [cameraName, setCameraName] = useState();
-
+    const [refreshMessage, setRefreshMessage] = useState('');
     const getCameras = async()=>{
         const cameraResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/users/getCameras/${JSON.parse(localStorage.getItem("jwt")).emailId}`, {
             method: "GET"
@@ -32,6 +32,25 @@ function DisplayUserCameras() {
             })
             .catch(err => console.log(err));
     }
+    const RefreshCamera = (camera)=>{
+      fetch(`${process.env.REACT_APP_SERVER_URL}/users/registerCamera/${JSON.parse(localStorage.getItem("jwt")).id}?action=refresh`, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({_id: camera._id, ip: camera.ip, name: camera.name, port:  camera.port, isRTSP: camera.isRTSP})
+        })
+          .then(response => {
+            console.log("res 1",response)
+            return response.json();
+          })
+          .then(response => {
+            console.log("res 2",response)
+            setRefreshMessage(response.Response);
+          })
+          .catch(err => console.log(err));
+  }
     const handleClose = () => setShow(false);
     useEffect(()=>{
         getCameras();
@@ -40,6 +59,7 @@ function DisplayUserCameras() {
 
   return (
     <>
+   {/* {refreshMessage.length>0 && <p>{refreshMessage}</p>} */}
      <Table style={{position:'relative', top:'5rem'}} striped bordered hover>
           <thead>
             <tr style={{backgroundColor:'cornflowerblue'}}>
@@ -48,6 +68,7 @@ function DisplayUserCameras() {
               <th>Name</th>
               <th>Edit</th>
               <th>Delete</th>
+              <th>Refresh</th>
             </tr>
           </thead>
           <tbody>
@@ -58,6 +79,7 @@ function DisplayUserCameras() {
                  <td>{camera.name}</td>
                  <td><Button  onClick={() => { setShow(true); setCameraId(camera._id); setCameraIp(camera.ip); setCameraName(camera.name)}}>Edit</Button></td>
                  <td><Button variant="danger" onClick={() => { deleteCamera(camera._id) }}>Delete</Button></td>
+                 <td><Button variant="warning" onClick={() => { RefreshCamera(camera) }}>Refresh</Button></td>
                </tr>
             })}
           </tbody>
