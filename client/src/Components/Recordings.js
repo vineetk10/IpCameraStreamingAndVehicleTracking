@@ -19,11 +19,39 @@ function Recordings() {
     const [selectedItem, setSelectedItem] = useState('');
     const [recordings, setRecordings] = useState();
     const [message, setMessage] = useState('');
+    const [sortBy, setSortBy] = useState('');
 
     const handleSelect = (eventKey) => {
       setSelectedItem(eventKey); // update the state when a dropdown item is selected
     };
 
+    const handleSortSelect = (eventKey) => {
+      setSortBy(eventKey); // update the state when a dropdown item is selected
+      let sortedList = [...recordings.recordings];
+      if (eventKey === 'duration') {
+        sortedList.sort((a, b) => a.duration - b.duration);
+      } else if (eventKey === 'startDate') {
+        sortedList.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+      } else if (eventKey === 'endDate') {
+        sortedList.sort((a, b) => new Date(a.endDate) - new Date(b.endDate));
+      }
+      console.log({ ...recordings, recordings: sortedList })
+      setRecordings({ ...recordings, recordings: sortedList });
+    };
+    // const filterRecordings = (recordings) => {
+    //   if (!recordings) return [];
+    //   let filteredRecordings = [...recordings.recordings];
+    //   if (duration) {
+    //     filteredRecordings = filteredRecordings.filter((recording) => recording.duration === duration);
+    //   }
+    //   if (startDate) {
+    //     filteredRecordings = filteredRecordings.filter((recording) => new Date(recording.startDate) >= new Date(startDate));
+    //   }
+    //   if (endDate) {
+    //     filteredRecordings = filteredRecordings.filter((recording) => new Date(recording.endDate) <= new Date(endDate));
+    //   }
+    //   return filteredRecordings;
+    // };
 
     const getAllRecordings = async()=>{
         const userRecordings = await fetch(`${process.env.REACT_APP_SERVER_URL}/users/recordings/${JSON.parse(localStorage.getItem("jwt")).id}`, {
@@ -60,6 +88,24 @@ function Recordings() {
     useEffect(()=>{
         getAllRecordings();
     },[])
+
+
+  //   useEffect(() => {
+  //     const sortRecordings = () => {
+  //         if (!recordings) return;
+  //         let sortedList = [...recordings.recordings];
+  //         if (sortBy === 'duration') {
+  //           sortedList.sort((a, b) => a.duration - b.duration);
+  //         } else if (sortBy === 'startDate') {
+  //           sortedList.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+  //         } else if (sortBy === 'endDate') {
+  //           sortedList.sort((a, b) => new Date(a.endDate) - new Date(b.endDate));
+  //         }
+  //         console.log({ ...recordings, recordings: sortedList })
+  //         setRecordings({ ...recordings, recordings: sortedList });
+  //     };
+  //     sortRecordings();
+  // }, [sortBy]);
   return (
     <div>
          <Header/>
@@ -78,6 +124,19 @@ function Recordings() {
             <Button style={{ margin:'1rem'}} onClick={handleQuery}>Query License</Button>
           </div>
           {message.length>0 && <h4 style={{color:'chartreuse', fontSize: '1.2rem'}}>{"Your requested video "+message+" is being processed"}</h4>}
+          <div>
+            <Dropdown style={{ margin:'1rem'}}  onSelect={handleSortSelect}>
+            <Dropdown.Toggle variant="primary" id="dropdown-basic">
+              {sortBy ? sortBy : 'Filter/Sort By'}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="duration">duration</Dropdown.Item>
+              <Dropdown.Item eventKey="startDate">Start Date</Dropdown.Item>
+              <Dropdown.Item eventKey="endDate">End Date</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          </div>
           <form style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr'}}>
             
               {
