@@ -64,7 +64,7 @@ function startStream (req, userId) {
         });
 
         ffmpegProcess.stderr.on('data', (data) => {
-            console.log(`FFmpeg stderr: ${data}`);
+            // console.log(`FFmpeg stderr: ${data}`);
         });
 
         ffmpegProcess.on('exit', (code) => {
@@ -156,7 +156,7 @@ function pollSQSMessages(){
                 // const destPath = sourcePath.replace('/src/rtsp/rtspUploads/', '/uploads/');
     
     
-                const updatedFileName = messageBody.outputFile.replace('.mp4', `_${Date.now()}.mp4`); // replace with your desired file name
+                const updatedFileName = messageBody.outputFile.replace('.mp4', `_${Date.now()}_ipcam.mp4`); // replace with your desired file name
                 const destPath = path.join(__dirname, '..', '..', 'uploads', updatedFileName);
     
     

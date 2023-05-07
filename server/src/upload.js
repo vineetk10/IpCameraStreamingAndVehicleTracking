@@ -51,6 +51,10 @@ function getVideoDuration(filePath) {
 
 // Function to upload a single video file to S3 and delete it from the directory
 function uploadVideo(videoPath) {
+
+  try{
+
+
     let length = 30;
     console.log('Inside uploadVideo')
     // getVideoDuration(videoPath)
@@ -84,11 +88,13 @@ function uploadVideo(videoPath) {
         console.log('TimeStamp: ', Date.now())
         console.log('videoStart: ', individualDetails[2])
         console.log('videoEnd: ', individualDetails[3])
+        console.log('videoType: ', individualDetails[4])
         //var videoEnd = new Date(parseInt(individualDetails[3]))
         //var videoStart = new Date(parseInt(individualDetails[2]))
        // videoStart.setSeconds(videoStart.getSeconds() - length)
         var videoEnd1 = new Date(parseInt(individualDetails[3]))
         var videoStart1 = new Date(parseInt(individualDetails[2]))
+        var videoType = individualDetails[4]
        // videoStart.setSeconds(videoStart.getSeconds() - length)
         videoEnd = videoEnd1.toISOString()
         videoStart = videoStart1.toISOString()
@@ -110,7 +116,8 @@ function uploadVideo(videoPath) {
           startDate: videoStart,
           endDate: videoEnd,
           duration : durationInSeconds,
-          s3URI: s3URI
+          s3URI: s3URI,
+          videoType: videoType
          }
 
          console.log('Before Recording ************************************ ', userId)
@@ -129,45 +136,59 @@ function uploadVideo(videoPath) {
 
       }
     });
+    
   }
+  catch(err){
+    console.log('Error in function uploadVideo(videoPath): ', err)
+  }
+
+}
   
 
 // Function to check for new videos in the directory and upload them to S3
 function checkForNewVideos() {
-   console.log('Inside checkForNewVideos')
-  fs.readdir(videoDir, (err, files) => {
-    if (err) {
-      console.error(err);
-    } else {
-      files.forEach((file) => {
-        const videoPath = path.join(videoDir, file);
-        fs.stat(videoPath, (err, stats) => {
-          if (err) {
-            console.error(err);
-          } else {
-            // Only upload files that are videos and haven't been uploaded before
-            if (stats.isFile() && path.extname(file).toLowerCase() === '.mp4') {
-              const key = path.basename(videoPath);
-              const s3params = {
-                Bucket: bucketName,
-                Key: key,
-              };
-              s3.headObject(s3params, (err, data) => {
-                if (err) {
-                  if (err.code === 'NotFound') {
-                    // File doesn't exist in S3, so upload it
-                    uploadVideo(videoPath);
-                  } else {
-                    console.error(err);
+
+  try{
+    console.log('Inside checkForNewVideos')
+    fs.readdir(videoDir, (err, files) => {
+      if (err) {
+        console.error(err);
+      } else {
+        files.forEach((file) => {
+          const videoPath = path.join(videoDir, file);
+          fs.stat(videoPath, (err, stats) => {
+            if (err) {
+              console.error(err);
+            } else {
+              // Only upload files that are videos and haven't been uploaded before
+              if (stats.isFile() && path.extname(file).toLowerCase() === '.mp4') {
+                const key = path.basename(videoPath);
+                const s3params = {
+                  Bucket: bucketName,
+                  Key: key,
+                };
+                s3.headObject(s3params, (err, data) => {
+                  if (err) {
+                    if (err.code === 'NotFound') {
+                      // File doesn't exist in S3, so upload it
+                      uploadVideo(videoPath);
+                    } else {
+                      console.error(err);
+                    }
                   }
-                }
-              });
+                });
+              }
             }
-          }
+          });
         });
-      });
-    }
-  });
+      }
+    });
+
+  }
+  catch(err){
+    console.log('Error in function checkForNewVideos(): ', err)
+  }
+
 }
 
 // Schedule the checkForNewVideos function to run every 5 minutes
