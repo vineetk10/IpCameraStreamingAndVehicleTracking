@@ -28,6 +28,7 @@ function DisplayUserCameras() {
             method: "DELETE"
           })
             .then(response => {
+              window.location.reload();
               return response.json();
             })
             .catch(err => console.log(err));

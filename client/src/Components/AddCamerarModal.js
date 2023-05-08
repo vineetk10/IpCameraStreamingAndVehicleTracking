@@ -3,7 +3,7 @@ import { Link,useHistory } from "react-router-dom";
 import { addCamera } from "../camera/cameraapicalls";
 import { Modal } from 'react-bootstrap'
 
-function AddCamerarModal({show,handleClose}) {
+function AddCamerarModal({show,setShow,handleClose}) {
      const [values, setValues] = useState({
     ip: "",
     name: "",
@@ -33,6 +33,7 @@ function AddCamerarModal({show,handleClose}) {
             error: "",
             success: true
           });
+          setShow(false);
         }
       })
       .catch((error)=>console.log("Error in adding ip camera ", error));
