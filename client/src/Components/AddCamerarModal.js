@@ -34,6 +34,7 @@ function AddCamerarModal({show,setShow,handleClose}) {
             success: true
           });
           setShow(false);
+          window.location.reload();
         }
       })
       .catch((error)=>console.log("Error in adding ip camera ", error));
