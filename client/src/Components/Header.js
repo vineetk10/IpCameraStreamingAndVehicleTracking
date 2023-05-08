@@ -2,7 +2,7 @@ import React from 'react'
 import '../css/Header.css'
 import { signout, isAutheticated } from "../auth/authapicalls";
 import { Button, Container, Nav, Navbar } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Avatar from 'react-avatar';
 
 function Header() {
@@ -11,7 +11,7 @@ function Header() {
   return (
       
       <Navbar bg="light" variant="light">
-         <span style={{marginLeft:'10px'}}>{isAutheticated() && <Avatar name={user.name} size="40"  round={true} />}</span>
+         <span style={{marginLeft:'10px'}}>{isAutheticated() && <Link to="/"><Avatar name={user.name} size="40"  round={true} /></Link>}</span>
 
         <Container style={{backgroundColor:'aliceblue'}}>
           {/* <Navbar.Brand href="#home">IP Camera Streaming & Vehcile Tracking</Navbar.Brand> */}

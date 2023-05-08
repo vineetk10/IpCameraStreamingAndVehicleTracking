@@ -48,6 +48,9 @@ function DisplayUserCameras() {
           .then(response => {
             console.log("res 2",response)
             setRefreshMessage(response.Response);
+            setTimeout(() => {
+              setRefreshMessage('');
+            }, 5000);
           })
           .catch(err => console.log(err));
   }
@@ -58,8 +61,9 @@ function DisplayUserCameras() {
     },[]);
 
   return (
-    <>
-   {/* {refreshMessage.length>0 && <p>{refreshMessage}</p>} */}
+    <div>
+      {refreshMessage.length>0 && <p style={{color:'forestgreen'}}>{refreshMessage}</p>}
+      
      <Table style={{position:'relative', top:'5rem'}} striped bordered hover>
           <thead>
             <tr style={{backgroundColor:'cornflowerblue'}}>
@@ -85,7 +89,7 @@ function DisplayUserCameras() {
           </tbody>
         </Table>
             <EditCameraModal show ={show} cameraId={cameraId} cameraIp={cameraIp} cameraName={cameraName} handleClose={handleClose}/>
-    </>
+    </div>
        
       );
 }

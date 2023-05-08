@@ -5,13 +5,18 @@ import AddIPCamera from './AddIPCamera'
 import { Button, Table } from 'react-bootstrap'
 import styled from 'styled-components';
 import VideoPlayer from './VideoPlayer'
-
+import AWS from 'aws-sdk';
 const StyledTd = styled.td`
   max-width: 200px; /* adjust the width as needed */
   white-space: nowrap; /* prevent line breaks */
   overflow-x: auto; /* hide any overflow */
 `;
 
+const s3 = new AWS.S3({
+    region: process.env.REACT_APP_S3_Region,
+    accessKeyId: process.env.REACT_APP_S3_accessKeyId,
+    secretAccessKey: process.env.REACT_APP_S3_secretAccessKey
+  });
 function RequestStatus() {
 
     const [statuses, setStatuses] = useState([]);
@@ -64,6 +69,12 @@ function RequestStatus() {
                 </thead>
                 <tbody>
                     {statuses.map((status,index)=>{
+                    const url = s3.getSignedUrl('getObject', {
+                        Bucket: process.env.REACT_APP_S3_BucketName,
+                        Key: status.message_id+".mp4",
+                        Expires: 3600 
+                    });
+                    console.log("URL",url);
                     return  <tr style={{backgroundColor:'azure'}}>
                         <StyledTd>{index}</StyledTd>
                         <StyledTd>{status.query_type}</StyledTd>
