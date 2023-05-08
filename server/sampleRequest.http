@@ -1,6 +1,6 @@
 // User Endpoints
 ###
-POST http://localhost:8000/users/register
+POST http://localhost:8080/users/register
 content-type: application/json
 
 {

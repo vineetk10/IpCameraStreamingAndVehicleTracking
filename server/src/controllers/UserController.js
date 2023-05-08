@@ -8,8 +8,90 @@ var webSocketUtils = require("../rtsp/webSocketUtils")
 exports.registerUser = ( req, res ) => {
    // console.log("Inside resgiter user");
     
-    const user = req.body;
+    // var user = req.body;
+
+    var startTime = Date.now()
+    // var endTime = Date.now()
+
+    // endTime = endTime.setSeconds(endTime.getSeconds() + 10);
+    startTimeISO = new Date(startTime).toISOString();
+    var endTimeISOVideo1 = startTime+ 16000
+    endTimeISOVideo1 = new Date(endTimeISOVideo1).toISOString();
+
+    var endTimeISOVideo2 = startTime+ 10000
+    endTimeISOVideo2 = new Date(endTimeISOVideo2).toISOString();
+
+    var endTimeISOVideo3 = startTime+ 35000
+    endTimeISOVideo3 = new Date(endTimeISOVideo3).toISOString();
+    
+
+    const user = {
+        ...req.body,
+        recordings: [
+            {
+                cameraName: "testingEmotion1",
+                name: "63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237",
+                startDate:startTimeISO,
+                endDate:endTimeISOVideo1,
+                duration: 16,
+                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237.mp4"
+            },
+            {
+                cameraName: "testingEmotion2",
+                name: "63e08cd02e597b0ed6ce32be_NewIpvideo2_1683423473042_1683424373117",
+                startDate:startTimeISO,
+                endDate:endTimeISOVideo2,
+                duration: 10,
+                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo2_1683423473042_1683424373117.mp4"
+            },
+            {
+                cameraName: "testingVehicle1",
+                name: "63e08cd02e597b0ed6ce32be_NewIpvideo2_1683423473042_1683424373117",
+                startDate:startTimeISO,
+                endDate:endTimeISOVideo2,
+                duration: 35,
+                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423707551_1683424373237.mp4"
+            }
+        ],
+        queries : [
+            // {
+            //     message_id: "",
+            //     input_key: "63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237.mp4",
+            //     input_url: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237.mp4",
+            //     status: "finished",
+            //     received_timestamp: startTimeISO,
+            //     query_type: "emotion",
+            //     finished_timestamp:endTimeISOVideo1 ,
+            //     output_url: ""
+            // },
+            {
+                message_id: "91e63adb-97a8-4db6-8aa0-e41f758a879c",
+                input_key: "63e08cd02e597b0ed6ce32be_NewIpvideo2_1683423473042_1683424373117.mp4",
+                input_url: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo2_1683423473042_1683424373117.mp4",
+                status: "finished",
+                received_timestamp: startTimeISO,
+                query_type: "emotion",
+                finished_timestamp: endTimeISOVideo2,
+                output_url: "https://295b.s3.amazonaws.com/91e63adb-97a8-4db6-8aa0-e41f758a879c.avi?response-content-type=video%2Fmp4&AWSAccessKeyId=AKIAU6YG2LF3GP2ZY4QP&Signature=usl%2FeLjEYE1p2wjfsECqLi4Y7oI%3D&Expires=1683591036"
+            },
+            {
+                message_id: "acb9a2be-a4c1-4a9a-88b7-67481f1fc1a2",
+                input_key: "63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423473042_1683424373117.mp4",
+                input_url: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423707551_1683424373237.mp4",
+                status: "finished",
+                received_timestamp: startTimeISO,
+                query_type: "license",
+                finished_timestamp: endTimeISOVideo3,
+                output_url: "https://295b.s3.us-west-1.amazonaws.com/acb9a2be-a4c1-4a9a-88b7-67481f1fc1a2.avi?response-content-type=video%2Fmp4&AWSAccessKeyId=AKIAU6YG2LF3GP2ZY4QP&Signature=Vdh%2FSbCYzNQ%2Fu0BGom6urgh4gEQ%3D&Expires=1683590178"
+            }
+        ]
+    }
+
+    // console.log(user)
+
+
     const newUser = new UserModel(user);
+
     newUser.save((err, result) => {
         if (err){
             res
@@ -20,7 +102,7 @@ exports.registerUser = ( req, res ) => {
             res.send(JSON.stringify({user: result}));
         }
     });
-    // res.json(user);
+
 
 }
 
