@@ -26,7 +26,7 @@ function Header() {
                 variant="light"
                 onClick={() => {
                   signout(() => {
-                    history.push("/");
+                    history.push("/login");
                   });
                 }}
               >
