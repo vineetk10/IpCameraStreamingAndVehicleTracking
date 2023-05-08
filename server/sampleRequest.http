@@ -77,7 +77,7 @@ content-type: application/json
 }
 
 ###
-POST http://localhost:8000/users/registerCamera/63e08cd02e597b0ed6ce32be
+POST http://localhost:8080/users/registerCamera/63e08cd02e597b0ed6ce32be
 content-type: application/json
 
 {
@@ -86,7 +86,7 @@ content-type: application/json
     "session" : "sessiontesting2",
     "connection": "connectiontesting2",
     "token": "tokentesting2",
-    "isRTSP": true
+    "isRTSP": false
 }
 
 
