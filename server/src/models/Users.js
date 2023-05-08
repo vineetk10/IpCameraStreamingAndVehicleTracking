@@ -48,6 +48,7 @@ const UserSchema = new mongoose.Schema({
     ],
     queries: [{
         message_id: String,
+        input_key: String,
         input_url: String,
         received_timestamp: Date,
         status: String,
