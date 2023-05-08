@@ -4,6 +4,7 @@ import Footer from './Footer'
 import AddIPCamera from './AddIPCamera'
 import { Button, Table } from 'react-bootstrap'
 import styled from 'styled-components';
+import VideoPlayer from './VideoPlayer'
 
 const StyledTd = styled.td`
   max-width: 200px; /* adjust the width as needed */
@@ -70,7 +71,7 @@ function RequestStatus() {
                         <StyledTd>{status.input_url}</StyledTd>
                         <StyledTd>{status.status}</StyledTd>
                         <StyledTd>{status.received_timestamp}</StyledTd>
-                        <StyledTd>{status.output_url!==null ? <a href={status.output_url}>Output</a> : ''}</StyledTd>
+                        <StyledTd>{status.output_url!==null ? <VideoPlayer url={status.output_url}>Output</VideoPlayer> : ''}</StyledTd>
                         <StyledTd><Button variant="danger" onClick={() => { deleteStatus(status.message_id) }}>Delete</Button></StyledTd>
                     </tr>
                     })}

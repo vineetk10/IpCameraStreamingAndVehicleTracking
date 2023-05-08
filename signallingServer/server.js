@@ -36,7 +36,7 @@ let users = {};
 
 let socketToRoom = {};
 let isFirstUser = true;
-let sender = "";
+// let sender = "";
 const maximum = process.env.MAXIMUM || 4;
 
 io.on('connection', socket => {
@@ -52,11 +52,11 @@ io.on('connection', socket => {
             users[data.room] = [{id: socket.id, email: data.email, name: data.name, isIp: data.isIp}];
         }
 
-        if(isFirstUser)
-        {
-            sender = socket.id
-            isFirstUser = false;
-        }
+        // if(isFirstUser)
+        // {
+        //     sender = socket.id
+        //     isFirstUser = false;
+        // }
         socketToRoom[socket.id] = data.room;
 
         socket.join(data.room);
@@ -66,7 +66,7 @@ io.on('connection', socket => {
 
         console.log(usersInThisRoom);
 
-        io.sockets.to(socket.id).emit('all_users', usersInThisRoom, sender);
+        io.sockets.to(socket.id).emit('all_users', usersInThisRoom);
     });
 
     socket.on('offer', data => {

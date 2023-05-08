@@ -89,7 +89,7 @@ const StreamCameras = () => {
         room: user.roomId,
         email: user.emailId,
         name: user.name,
-        isIp: user.isIp
+        isIp: user.ip
       });
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
@@ -149,8 +149,8 @@ const StreamCameras = () => {
     socketRef.current = io.connect(SOCKET_SERVER_URL);
     getLocalStream();
 
-    socketRef.current.on('all_users', (allUsers, sender) => {
-        allUsers.filter(x=>x.id==sender).forEach(async (userInfo) => {
+    socketRef.current.on('all_users', (allUsers) => {
+        allUsers.filter(x=>!x.isIp).forEach(async (userInfo) => {
           if (!localStreamRef.current) return;
           const pc = createPeerConnection(userInfo.id, userInfo.name);
           if (!(pc && socketRef.current)) return;
