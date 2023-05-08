@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function VideoPlayer({ url }) {
+function VideoPlayer({ url, height }) {
   const [player, setPlayer] = useState(null);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ function VideoPlayer({ url }) {
     <video
       ref={setPlayer}
       controls
-      style={{ width: '100%', height: 'auto' }}
+      style={{ width: '100%', height: height? height : 'auto' }}
     />
   );
 }

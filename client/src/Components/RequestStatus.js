@@ -69,20 +69,24 @@ function RequestStatus() {
                 </thead>
                 <tbody>
                     {statuses.map((status,index)=>{
-                    const url = s3.getSignedUrl('getObject', {
+                    const outputUrl = s3.getSignedUrl('getObject', {
                         Bucket: process.env.REACT_APP_S3_BucketName,
                         Key: status.message_id+".mp4",
                         Expires: 3600 
                     });
-                    console.log("URL",url);
+                    const inputUrl = s3.getSignedUrl('getObject', {
+                      Bucket: process.env.REACT_APP_S3_BucketName,
+                      Key: status.input_key ? status.input_key : 'abc',
+                      Expires: 3600 
+                  });
                     return  <tr style={{backgroundColor:'azure'}}>
                         <StyledTd>{index}</StyledTd>
                         <StyledTd>{status.query_type}</StyledTd>
                         <StyledTd>{status.message_id}</StyledTd>
-                        <StyledTd>{status.input_url}</StyledTd>
+                        <StyledTd>{status.input_key!=null ?  <VideoPlayer url={inputUrl}>Output</VideoPlayer> : ''}</StyledTd>
                         <StyledTd>{status.status}</StyledTd>
                         <StyledTd>{status.received_timestamp}</StyledTd>
-                        <StyledTd>{status.output_url!==null ? <VideoPlayer url={status.output_url}>Output</VideoPlayer> : ''}</StyledTd>
+                        <StyledTd>{status.output_url!==null ? <VideoPlayer height="15rem" url={outputUrl}/> : ''}</StyledTd>
                         <StyledTd><Button variant="danger" onClick={() => { deleteStatus(status.message_id) }}>Delete</Button></StyledTd>
                     </tr>
                     })}
@@ -90,7 +94,7 @@ function RequestStatus() {
                 </Table>
             {/* <EditCameraModal show ={show} cameraId={cameraId} cameraIp={cameraIp} cameraName={cameraName} handleClose={handleClose}/> */}
          </div>
-        <Footer/>
+        {/* <Footer/> */}
     </div>
   )
 }

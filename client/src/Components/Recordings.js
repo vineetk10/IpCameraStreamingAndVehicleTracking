@@ -130,7 +130,7 @@ function Recordings() {
           return <div style={{ position: 'relative' }}>
             {recording.duration}
             <input style={{ position: 'absolute', zIndex: 1, top: '2rem', left: '1rem' }} type="radio" id={index} name="recording" value={recording.name}
-              onChange={(e) => { setSelectedVideoURL(recording.url); } } />
+              onChange={(e) => { setSelectedVideoURL(recording.s3URI); } } />
             <VideoPlayer url={recording.url} />
           </div>;
 
