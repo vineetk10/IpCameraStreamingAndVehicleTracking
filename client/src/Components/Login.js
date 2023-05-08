@@ -98,7 +98,7 @@ const Login = () => {
               />
             </div>
             <div className="form-group">
-            <label className="text-secondary">Is IP?</label>
+            <label className="text-secondary">Is WebCam?</label>
             <input type="checkbox" onClick={()=>setValues({...values,isIp:!values.isIp})}></input>
             </div>
            {values.isIp && <div className="form-group">
