@@ -50,7 +50,7 @@ const Signup = () => {
       {/* <Navbar /> */}
       <div className="row">
         <div className="col-md-6 text-center">
-          <h1 className="text-dark">Vehicle Tracking</h1>
+          {/* <h1 className="text-dark">Vehicle Tracking</h1> */}
         </div>
         <div className="col-md-4 text-left bg-white p-3 offset-md-1 rounded shadow p-3 mb-5 mt-5">
           <form>

@@ -60,10 +60,10 @@ function RequestStatus() {
                     <th>#</th>
                     <th>Query Type</th>
                     <th>Message Id</th>
-                    <th>Input Url</th>
+                    <th>Input</th>
                     <th>Status</th>
                     <th>Recieved Timestamp</th>
-                    <th>Output URL</th>
+                    <th>Output</th>
                     <th>Delete</th>
                     </tr>
                 </thead>
@@ -80,10 +80,10 @@ function RequestStatus() {
                       Expires: 3600 
                   });
                     return  <tr style={{backgroundColor:'azure'}}>
-                        <StyledTd>{index}</StyledTd>
+                        <StyledTd>{index+1}</StyledTd>
                         <StyledTd>{status.query_type}</StyledTd>
                         <StyledTd>{status.message_id}</StyledTd>
-                        <StyledTd>{status.input_key!=null ?  <VideoPlayer url={inputUrl}>Output</VideoPlayer> : ''}</StyledTd>
+                        <StyledTd>{status.input_key!=null ?  <VideoPlayer height="15rem" url={inputUrl}>Output</VideoPlayer> : ''}</StyledTd>
                         <StyledTd>{status.status}</StyledTd>
                         <StyledTd>{status.received_timestamp}</StyledTd>
                         <StyledTd>{status.output_url!==null ? <VideoPlayer height="15rem" url={outputUrl}/> : ''}</StyledTd>

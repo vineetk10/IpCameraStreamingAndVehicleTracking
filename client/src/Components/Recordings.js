@@ -113,25 +113,23 @@ function Recordings() {
   )
 
   function VideoRecordingsGrid() {
-    return <div style={{ backgroundColor: 'cornflowerblue', height: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+    return <div style={{ backgroundColor: 'cornflowerblue', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr' ,  gridGap:'20px', margin:'1rem'}}>
 
       {filteredRecordings.length > 0 ? (
         filteredRecordings.map((recording, index) => {
           return <div style={{ position: 'relative' }}>
-            {recording.duration}
             <input style={{ position: 'absolute', zIndex: 1, top: '2rem', left: '1rem' }} type="radio" id={index} name="recording" value={recording.name}
               onChange={(e) => { setSelectedVideoURL(recording.url); } } />
-            <VideoPlayer url={recording.url} />
+            <VideoPlayer height="15rem" width="15rem" url={recording.url} />
           </div>;
 
         })
       ) :
         recordings && recordings.map((recording, index) => {
-          return <div style={{ position: 'relative' }}>
-            {recording.duration}
+          return <div style={{ position: 'relative', margin:'1rem' }}>
             <input style={{ position: 'absolute', zIndex: 1, top: '2rem', left: '1rem' }} type="radio" id={index} name="recording" value={recording.name}
               onChange={(e) => { setSelectedVideoURL(recording.s3URI); } } />
-            <VideoPlayer url={recording.url} />
+            <VideoPlayer height="15rem" width="15rem" url={recording.url} />
           </div>;
 
         })}
