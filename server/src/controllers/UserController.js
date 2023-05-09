@@ -46,7 +46,7 @@ exports.registerUser = ( req, res ) => {
             },
             {
                 cameraName: "testingVehicle1",
-                name: "63e08cd02e597b0ed6ce32be_NewIpvideo2_1683423473042_1683424373117",
+                name: "63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423707551_1683424373237",
                 startDate:startTimeISO,
                 endDate:endTimeISOVideo2,
                 duration: 35,
@@ -76,7 +76,7 @@ exports.registerUser = ( req, res ) => {
             },
             {
                 message_id: "acb9a2be-a4c1-4a9a-88b7-67481f1fc1a2",
-                input_key: "63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423473042_1683424373117.mp4",
+                input_key: "63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423707551_1683424373237.mp4",
                 input_url: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423707551_1683424373237.mp4",
                 status: "finished",
                 received_timestamp: startTimeISO,
