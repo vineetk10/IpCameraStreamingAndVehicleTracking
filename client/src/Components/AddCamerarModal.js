@@ -63,10 +63,10 @@ function AddCamerarModal({show,setShow,handleClose}) {
                 />
             </div>
             <div className="form-group">
-            <label className="text-secondary">Is IP?</label>
+            <label className="text-secondary">Is IP Camera?</label>
             <input type="checkbox" onClick={()=>setValues({...values,isIp:!values.isIp})}></input>
             </div>
-            <button onClick={onSubmit} className="btn btn-primary w-100 rounded mt-2" type="button">Add IP Camera</button>  
+            <button onClick={onSubmit} className="btn btn-primary w-100 rounded mt-2" type="button">Add Camera</button>  
             {/* <div onClick={RedirectToLogin}>Already have an account? Log in</div>  */}
         </form>
     </Modal>

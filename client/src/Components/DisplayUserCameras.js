@@ -79,7 +79,7 @@ function DisplayUserCameras() {
           <tbody>
             {cameras.map((camera,index)=>{
               return  <tr style={{backgroundColor:'azure'}}>
-                 <td>{index}</td>
+                 <td>{index+1}</td>
                  <td>{camera.ip}</td>
                  <td>{camera.name}</td>
                  <td><Button  onClick={() => { setShow(true); setCameraId(camera._id); setCameraIp(camera.ip); setCameraName(camera.name)}}>Edit</Button></td>

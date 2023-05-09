@@ -30,7 +30,7 @@ const AddIPCamera = () => {
     
      <div style={{display:'flex', justifyContent:'space-between' ,marginTop:'10px'}}>
      <div></div>
-            <span className="header__logo"><IoAddCircleSharp style={{color:"#FFCA2C" }} size={50} onClick={handleShow}/> Add Ip Camera</span>
+            <span className="header__logo"><IoAddCircleSharp style={{color:"#FFCA2C" }} size={50} onClick={handleShow}/> Add Camera</span>
             {show && <AddCamerarModal show ={show} setShow={setShow} handleClose={handleClose}/>}
       </div>
             <DisplayUserCameras/>
