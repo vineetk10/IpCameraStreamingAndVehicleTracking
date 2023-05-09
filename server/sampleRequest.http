@@ -46,10 +46,10 @@ content-type: application/json
 }
 
 
-# ssh -i "295-backend.pem" ubuntu@ec2-54-190-19-109.us-west-2.compute.amazonaws.comls
+# ssh -i "295-backend.pem" ubuntu@ec2-35-92-138-186.us-west-2.compute.amazonaws.com
 
 ###
-POST http://54.190.19.109:8080/users/registerCamera/63e08cd02e597b0ed6ce32be
+POST http://35.92.138.186:8080/users/registerCamera/63e08cd02e597b0ed6ce32be
 content-type: application/json
 
 {
@@ -64,7 +64,7 @@ content-type: application/json
 
 # On EC2 instance
 ###
-POST http://54.190.19.109:8080/users/registerCamera/63e08cd02e597b0ed6ce32be
+POST http://35.92.138.186:8080/users/registerCamera/63e08cd02e597b0ed6ce32be
 content-type: application/json
 
 {
@@ -144,7 +144,7 @@ GET   http://localhost:8000/users/recordings/63e588d81a45d5ed13627138
 
 ###
 # To get all the requests for a user, pass the _id
-GET   http://localhost:8080/users/queries/63e08cd02e597b0ed6ce32be
+GET   http://35.92.138.186:8080/users/queries/63e08cd02e597b0ed6ce32be
 
 ###
 # TO delete a particular message_id or request, pass the _id/message_id
