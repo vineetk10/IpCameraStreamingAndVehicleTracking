@@ -244,10 +244,6 @@ const StreamCameras = () => {
         delete pcsRef.current[user.id];
       });
 
-      if (localStream) {
-        localStream.getTracks().forEach((track) => track.stop());
-        setLocalStream(null)
-      }
     };
 
     
