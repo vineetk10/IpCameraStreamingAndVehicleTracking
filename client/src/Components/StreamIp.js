@@ -25,6 +25,7 @@ const StreamCameras = () => {
   const localVideoRef = useRef(null);
   const localStreamRef = useRef();
   const [users, setUsers] = useState([]);
+  const [localStream, setLocalStream] = useState();
   const getLocalStream = useCallback(async () => {
     try {
       const localStream = await navigator.mediaDevices.getUserMedia({
@@ -34,7 +35,7 @@ const StreamCameras = () => {
           height: 400,
         },
       });
-
+      setLocalStream(localStream)
       let chunks = [];
      
       // let totalSize = 0;
@@ -248,24 +249,13 @@ const StreamCameras = () => {
 
   return (
     <div>
-      {/* <video
-        style={{
-          width: 240,
-          height: 240,
-          margin: 5,
-          backgroundColor: 'black',
-        }}
-        muted
-        ref={localVideoRef}
-        autoPlay
-      /> */}
     <Header/>
     <div className="row" id="cards">
       {users.map((user, index) => (
         // <div style={{marginLeft:'2rem'}} key={index} className="col-4 mb-4">
         <Video key={index} email={user.name} stream={user.stream} muted={true}/>
-        // </div>   
       ))}
+      <Video  email={user.name} stream={localStream} ref={localVideoRef} muted={true}/>
       </div>
     </div>
   );
