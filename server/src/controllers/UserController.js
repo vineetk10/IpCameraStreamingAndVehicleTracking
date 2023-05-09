@@ -54,16 +54,16 @@ exports.registerUser = ( req, res ) => {
             }
         ],
         queries : [
-            // {
-            //     message_id: "",
-            //     input_key: "63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237.mp4",
-            //     input_url: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237.mp4",
-            //     status: "finished",
-            //     received_timestamp: startTimeISO,
-            //     query_type: "emotion",
-            //     finished_timestamp:endTimeISOVideo1 ,
-            //     output_url: ""
-            // },
+            {
+                message_id: "b1216889-9724-4d45-8c5f-fb7cc72f0bc9",
+                input_key: "63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237.mp4",
+                input_url: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237.mp4",
+                status: "finished",
+                received_timestamp: startTimeISO,
+                query_type: "emotion",
+                finished_timestamp:endTimeISOVideo1 ,
+                output_url: "https://295b.s3.us-west-1.amazonaws.com/b1216889-9724-4d45-8c5f-fb7cc72f0bc9.mp4"
+            },
             {
                 message_id: "91e63adb-97a8-4db6-8aa0-e41f758a879c",
                 input_key: "63e08cd02e597b0ed6ce32be_NewIpvideo2_1683423473042_1683424373117.mp4",
