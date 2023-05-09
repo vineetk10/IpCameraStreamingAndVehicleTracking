@@ -34,7 +34,8 @@ exports.registerUser = ( req, res ) => {
                 startDate:startTimeISO,
                 endDate:endTimeISOVideo1,
                 duration: 16,
-                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237.mp4"
+                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo1_1683423707551_1683424373237.mp4",
+                videoType: "webcam"
             },
             {
                 cameraName: "testingEmotion2",
@@ -42,7 +43,8 @@ exports.registerUser = ( req, res ) => {
                 startDate:startTimeISO,
                 endDate:endTimeISOVideo2,
                 duration: 10,
-                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo2_1683423473042_1683424373117.mp4"
+                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo2_1683423473042_1683424373117.mp4",
+                videoType: "webcam"
             },
             {
                 cameraName: "testingVehicle1",
@@ -50,7 +52,8 @@ exports.registerUser = ( req, res ) => {
                 startDate:startTimeISO,
                 endDate:endTimeISOVideo2,
                 duration: 35,
-                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423707551_1683424373237.mp4"
+                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423707551_1683424373237.mp4",
+                videoType: "ipcam"
             }
         ],
         queries : [
