@@ -243,9 +243,18 @@ const StreamCameras = () => {
         pcsRef.current[user.id].close();
         delete pcsRef.current[user.id];
       });
+
+      if (localStream) {
+        localStream.getTracks().forEach((track) => track.stop());
+        setLocalStream(null)
+      }
     };
+
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createPeerConnection, getLocalStream]);
+
+
 
   return (
     <div>
