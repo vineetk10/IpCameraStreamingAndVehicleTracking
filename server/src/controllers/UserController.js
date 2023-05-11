@@ -54,6 +54,15 @@ exports.registerUser = ( req, res ) => {
                 duration: 35,
                 s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423707551_1683424373237.mp4",
                 videoType: "ipcam"
+            },
+            {
+                cameraName: "testingVehicle2",
+                name: "63e08cd02e597b0ed6ce32be_NewIpvideo4_1683423707551_1683424373237",
+                startDate:startTimeISO,
+                endDate:endTimeISOVideo2,
+                duration: 34,
+                s3URI: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo4_1683423707551_1683424373237.mp4",
+                videoType: "ipcam"
             }
         ],
         queries : [
