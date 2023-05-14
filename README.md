@@ -33,7 +33,8 @@ Run con_simple.py(consumer for emotion detection): python3 con_simple.py <br>
 Run con2.py (consumer for license plate detection): python3 con2.py <br>
 
 5. Experiment:<br>
-Code already in place in file con_simple.py (the emotion detction consumer) calculates the time taken to process the frames and convert the processed frames into videos. In Line 127, we have executor = concurrent.futures.ThreadPoolExecutor(max_workers=N) where N can be substituted for the number of threads that spaw in parallel to process the frames.
+Code already in place in file con_simple.py(the emotion detction consumer), under processing_server/project calculates the time taken to process the frames and convert the processed frames into videos. In Line 127, we have executor = concurrent.futures.ThreadPoolExecutor(max_workers=N) where N can be substituted for the number of threads that spaw in parallel to process the frames.
+
 
 ## Architecture Diagram
 ![Architecture Diagram](https://user-images.githubusercontent.com/26499781/231992341-8f29d4cb-8cde-4ad3-9e0b-0e989c0ede1c.png)
@@ -46,3 +47,18 @@ Code already in place in file con_simple.py (the emotion detction consumer) calc
 
 ## High-level design for handling video streams using Kafka Consumer/Producer mechanisms
 <img width="673" alt="image" src="https://user-images.githubusercontent.com/26499781/231993110-0a840ad3-f699-466d-a291-3b0b2a7d12b9.png">
+
+
+## Experiment:
+
+
+<img width="1275" alt="1" src="https://github.com/vineetk10/IpCameraStreamingAndVehicleTracking/assets/90799950/d6e2547c-c54e-4d6e-8d3d-1402def32df7">
+Processing time with one thread
+<img width="1343" alt="2" src="https://github.com/vineetk10/IpCameraStreamingAndVehicleTracking/assets/90799950/7264ca54-4eeb-476c-8335-f4801861eed1">
+Processing time with 4 threads
+
+<img width="1258" alt="4" src="https://github.com/vineetk10/IpCameraStreamingAndVehicleTracking/assets/90799950/9a6ba95d-c82b-403e-afaa-12a4943eb6c0"><img width="1258" alt="6" src="https://github.com/vineetk10/IpCameraStreamingAndVehicleTracking/assets/90799950/2acfcc56-ff6b-4f71-979e-093308b119fd">
+Processing with 6 threads
+<img width="1281" alt="8" src="https://github.com/vineetk10/IpCameraStreamingAndVehicleTracking/assets/90799950/1282a4e3-70f0-4e39-aab3-05150f419516">
+Processing with 8 threads
+
