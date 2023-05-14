@@ -9,7 +9,7 @@ d. Processing server - This contains the kafka code for producer and consumer.<b
 
 To start each of the application you will have to:
 1. Client:- 
-  a. Create .env file in the root folder of client and add the values for REACT_APP_SIGNALLING_SERVER_URL, REACT_APP_SERVER_URL, REACT_APP_SERVER_IP, REACT_APP_S3_Region, REACT_APP_S3_BucketName, REACT_APP_S3_accessKeyId, REACT_APP_S3_secretAccessKey, REACT_APP_ProcessingServer. 
+  a. Create .env file in the root folder of client and add the values for REACT_APP_SIGNALLING_SERVER_URL, REACT_APP_SERVER_URL, REACT_APP_SERVER_IP, REACT_APP_S3_Region, REACT_APP_S3_BucketName, REACT_APP_S3_accessKeyId, REACT_APP_S3_secretAccessKey, REACT_APP_ProcessingServer.  <br>
   b. Run command "npm install" and "npm start"
   
 2. Server:-
@@ -19,7 +19,7 @@ To start each of the application you will have to:
 DELAY_SECONDS=20
 
 // Provide the maximum msgs that can be polled from the SQS
-MAX_MSGS_POLLED=10
+MAX_MSGS_POLLED=10 <br>
   b. Run command "npm install" and "npm start"
 
 3. Signalling server - Deploy this code on cloud and run command "npm install" and "npm start".
