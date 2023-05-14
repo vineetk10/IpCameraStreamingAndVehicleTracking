@@ -61,11 +61,11 @@ Processing time with 4 threads
 <br>
 <br>
 <img width="1258" alt="4" src="https://github.com/vineetk10/IpCameraStreamingAndVehicleTracking/assets/90799950/9a6ba95d-c82b-403e-afaa-12a4943eb6c0"><img width="1258" alt="6" src="https://github.com/vineetk10/IpCameraStreamingAndVehicleTracking/assets/90799950/2acfcc56-ff6b-4f71-979e-093308b119fd">
-<br>
-<br>
 Processing with 6 threads
+<br>
+<br>
 <img width="1281" alt="8" src="https://github.com/vineetk10/IpCameraStreamingAndVehicleTracking/assets/90799950/1282a4e3-70f0-4e39-aab3-05150f419516">
-<br>
-<br>
 Processing with 8 threads
+<br>
+<br>
 
