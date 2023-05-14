@@ -8,11 +8,11 @@ c. Signalling server - This contains the intermidiary server side code for creat
 d. Processing server - This contains the kafka code for producer and consumer.<br>
 
 To start each of the application you will have to:
-1. Client:- 
+1. Client:- <br>
   a. Create .env file in the root folder of client and add the values for REACT_APP_SIGNALLING_SERVER_URL, REACT_APP_SERVER_URL, REACT_APP_SERVER_IP, REACT_APP_S3_Region, REACT_APP_S3_BucketName, REACT_APP_S3_accessKeyId, REACT_APP_S3_secretAccessKey, REACT_APP_ProcessingServer.  <br>
   b. Run command "npm install" and "npm start"
   
-2. Server:-
+2. Server:- <br>
   a. Create a config.env file in the root folder of server and add values for ATLAS_URI ,PORT=8000, YOUR_ACCESS_KEY_ID, YOUR_SECRET_ACCESS_KEY, SQS_REGION, SQS_URL
 
 //Provide the seconds delay to show msgs on the SQS
