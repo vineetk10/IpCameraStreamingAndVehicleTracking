@@ -24,7 +24,13 @@ MAX_MSGS_POLLED=10 <br>
 
 3. Signalling server - Deploy this code on cloud and run command "npm install" and "npm start".
 
-4. Processing server - 
+4. Processing server:
+Installtaion: Install tensorflow, opencv , fer, moviepy, numpy
+Run zookeeper: bin/zookeeper-server-start.sh config/zookeeper.properties
+Run Kafka: bin/kafka-server-start.sh config/server.properties
+Run producer.py : flask run --host=0.0.0.0 --port=8080
+Run con_simple.py(consumer for emotion detection): python3 con_simple.py
+Run con2.py (consumer for license plate detection): python3 con2.py
 
 ## Architecture Diagram
 ![Architecture Diagram](https://user-images.githubusercontent.com/26499781/231992341-8f29d4cb-8cde-4ad3-9e0b-0e989c0ede1c.png)
