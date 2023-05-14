@@ -1,5 +1,12 @@
 # MultiCameraObjectTracking
 
+## Steps to run the application
+There are 4 main components of this application which are:- 
+a. Client - This contains the UI code for the application.
+b. Server - This contains all the server side code for the application which includes user api's, camera api's and storing video to S3.
+c. Signalling server - This contains the intermidiary server side code for creating a websocket connection between multiple clients.
+d. Processing server - This contains the kafka code for producer and consumer.
+
 ## Architecture Diagram
 ![Architecture Diagram](https://user-images.githubusercontent.com/26499781/231992341-8f29d4cb-8cde-4ad3-9e0b-0e989c0ede1c.png)
 
