@@ -37,7 +37,7 @@ function IpCameraStreaming() {
         ports.map((port)=>{ 
           return <JsmpegPlayer
           wrapperClassName="video-wrapper"
-          videoUrl= {"ws://54.190.19.109:"+port}
+          videoUrl= {`ws://${process.env.REACT_APP_SERVER_IP}:`+port}
           options={videoOptions}
           overlayOptions={videoOverlayOptions}
           />

@@ -78,7 +78,7 @@ function Recordings() {
     }
 
     const handleQuery = async()=>{
-      const response = await fetch(`${process.env.REACT_APP_ADARSH}/extract_frames`, {
+      const response = await fetch(`${process.env.REACT_APP_ProcessingServer}/extract_frames`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -163,7 +163,7 @@ function RecordingFilters(handleSortSelect, sortBy) {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item eventKey="duration">duration</Dropdown.Item>
+        <Dropdown.Item eventKey="duration">Duration</Dropdown.Item>
         <Dropdown.Item eventKey="startDate">Start Date</Dropdown.Item>
         <Dropdown.Item eventKey="endDate">End Date</Dropdown.Item>
         <Dropdown.Item eventKey="webcam">Webcam</Dropdown.Item>
