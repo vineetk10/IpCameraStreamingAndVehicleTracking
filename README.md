@@ -46,7 +46,8 @@ Code already in place in file con_simple.py(the emotion detction consumer), unde
 ![HLD (3)](https://user-images.githubusercontent.com/26499781/231993954-d66af9e9-f13c-4515-a812-59db7351e2a3.png)
 
 ## High-level design for handling video streams using Kafka Consumer/Producer mechanisms
-<img width="673" alt="image" src="https://user-images.githubusercontent.com/26499781/231993110-0a840ad3-f699-466d-a291-3b0b2a7d12b9.png">
+![Blank diagram](https://github.com/vineetk10/IpCameraStreamingAndVehicleTracking/assets/90799950/acc75aa0-b66c-4fc4-899a-c216b4912bb4)
+
 
 
 ## Experiment:
