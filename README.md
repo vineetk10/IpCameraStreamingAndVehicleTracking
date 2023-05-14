@@ -25,7 +25,7 @@ MAX_MSGS_POLLED=10 <br>
 3. Signalling server - Deploy this code on cloud and run command "npm install" and "npm start".
 
 4. Processing server: <br>
-Installtaion: Insatll kafka. Also install tensorflow, opencv , fer, moviepy, numpy <br>
+Instaltaion: Insatll kafka. Also install tensorflow, opencv , fer, moviepy, numpy <br>
 Run zookeeper: bin/zookeeper-server-start.sh config/zookeeper.properties <br>
 Run Kafka: bin/kafka-server-start.sh config/server.properties <br>
 Run producer.py : flask run --host=0.0.0.0 --port=8080 <br>
