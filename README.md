@@ -7,6 +7,25 @@ b. Server - This contains all the server side code for the application which inc
 c. Signalling server - This contains the intermidiary server side code for creating a websocket connection between multiple clients.<br>
 d. Processing server - This contains the kafka code for producer and consumer.<br>
 
+To start each of the application you will have to:
+1. Client:- 
+  a. Create .env file in the root folder of client and add the values for REACT_APP_SIGNALLING_SERVER_URL, REACT_APP_SERVER_URL, REACT_APP_SERVER_IP, REACT_APP_S3_Region, REACT_APP_S3_BucketName, REACT_APP_S3_accessKeyId, REACT_APP_S3_secretAccessKey, REACT_APP_ProcessingServer. 
+  b. Run command "npm install" and "npm start"
+  
+2. Server:-
+  a. Create a config.env file in the root folder of server and add values for ATLAS_URI ,PORT=8000, YOUR_ACCESS_KEY_ID, YOUR_SECRET_ACCESS_KEY, SQS_REGION, SQS_URL
+
+//Provide the seconds delay to show msgs on the SQS
+DELAY_SECONDS=20
+
+// Provide the maximum msgs that can be polled from the SQS
+MAX_MSGS_POLLED=10
+  b. Run command "npm install" and "npm start"
+
+3. Signalling server - Deploy this code on cloud and run command "npm install" and "npm start".
+
+4. Processing server - 
+
 ## Architecture Diagram
 ![Architecture Diagram](https://user-images.githubusercontent.com/26499781/231992341-8f29d4cb-8cde-4ad3-9e0b-0e989c0ede1c.png)
 
