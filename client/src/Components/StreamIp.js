@@ -26,6 +26,8 @@ const StreamCameras = () => {
   const localStreamRef = useRef();
   const [users, setUsers] = useState([]);
   const [localStream, setLocalStream] = useState();
+  const [recorder, setRecorder] = useState(null);
+
   const getLocalStream = useCallback(async () => {
     try {
       const localStream = await navigator.mediaDevices.getUserMedia({
@@ -45,42 +47,42 @@ const StreamCameras = () => {
         timeslice: 50000 // 50 KB
       };
       const recorder = new MediaRecorder(localStream, mediaRecorderOptions);
+      setRecorder(recorder);
 
       // testing to add the start date in the file name
       let startDate = Date.now()
-      recorder.start(1000);
+      // recorder.start(1000);
       
       recorder.ondataavailable = (event) => {
-        console.log('Recording started');
         chunks.push(event.data);
+        
         if (chunks.length >= CHUNK_SIZE) {
-          if (recorder.state === 'recording') {
-            recorder.stop();
-          }
+          console.log("Inside ondataavailable")
+          saveData('uploadChunks');
         }
       };
-      recorder.onstop = (event) => {
-        console.log('Recording stopped');
+
+      const saveData = (apiName)=>{
+        console.log("saveData")
         const blob = new Blob(chunks, { type: 'video/webm' });
         chunks = [];
         const xhr = new XMLHttpRequest();
         const formData = new FormData();
-        // send counter in file name to verify
-
 
         var fileName = user.id + '_' + user.name + '_' + startDate + '_' + Date.now()  + '_webcam.webm' ;
-        // var fileName = user.id + '_' + user.name + '_' + Date.now() + '.webm' ;
-        // totalSize+= 1;
+        
         formData.append('file', blob, fileName);
-        xhr.open('POST', BACKEND_SERVER_URL + '/upload', true);
+        xhr.open('POST', BACKEND_SERVER_URL + `/${apiName}`, true);
         xhr.onreadystatechange = function() {
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             console.log('Video uploaded successfully!');
           }
         };
         xhr.send(formData);
-        startDate = Date.now()
-        recorder.start(1000);
+      }
+
+      recorder.onstop = () => {
+        saveData('stopChunks');
       };
       
       localStreamRef.current = localStream;
@@ -96,6 +98,21 @@ const StreamCameras = () => {
       console.log(`getUserMedia error: ${e}`);
     }
   }, []);
+
+  const startRecording = () => {
+    console.log('Recording started')
+    if (recorder) {
+      recorder.start(1000);
+    }
+  };
+
+  
+  const stopRecording = () => {
+    console.log('Recording stopped')
+    if (recorder && recorder.state === 'recording') {
+      recorder.stop();
+    }
+  };
 
   const createPeerConnection = useCallback((socketID, name) => {
     try {
@@ -260,7 +277,7 @@ const StreamCameras = () => {
         // <div style={{marginLeft:'2rem'}} key={index} className="col-4 mb-4">
         <Video key={index} email={user.name} stream={user.stream} muted={true}/>
       ))}
-      <Video  email={user.name} stream={localStream} ref={localVideoRef} muted={true}/>
+      <Video onStart={startRecording} onStop={stopRecording}  email={user.name} stream={localStream} ref={localVideoRef} muted={true}/>
       </div>
     </div>
   );

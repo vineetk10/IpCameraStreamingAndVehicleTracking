@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -16,20 +17,31 @@ const VideoContainer = styled.video`
 const UserLabel = styled.p`
 	display: inline-block;
 	position: absolute;
-	bottom: 10px;
+	top: 10px;
 	left: 1.5rem;
 	font-size: 1.2rem;
 	color: black;
 	font-family: cursive;
 `;
 
+const VideoButtonsDiv = styled.div`
+	display: flex;
+	position: absolute;
+	justify-content: space-between;
+	bottom: 0px;
+	right:1px;
+`
+
+const VideoButtons = styled.button`
+	
+`
 // interface Props {
 // 	email: string;
 // 	stream: MediaStream;
 // 	muted?: boolean;
 // }
 
-const Video = ({ email, stream, muted }) => {
+const Video = ({onStart, onStop, email, stream, muted }) => {
 	const ref = useRef(null);
 	const [isMuted, setIsMuted] = useState(false);
 
@@ -42,6 +54,12 @@ const Video = ({ email, stream, muted }) => {
 		<Container  style={{ width: '100%' }}>
 			<VideoContainer  ref={ref} muted={isMuted} autoPlay />
 			<UserLabel>{email}</UserLabel>
+			{onStart && onStop &&
+			<VideoButtonsDiv>
+				<VideoButtons onClick={onStart}>Start Stream</VideoButtons>
+				<VideoButtons onClick={onStop}>Stop Stream</VideoButtons>
+			</VideoButtonsDiv>
+	}
 	  </Container>
 		
 	);
