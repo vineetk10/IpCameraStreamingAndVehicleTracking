@@ -189,7 +189,7 @@ app.post('/stopChunks', upload1.single('file'), function(req, res) {
 
 
     const directoryPath1 = path.join(baseDirectory, `${userid}_${camera}_${startTime}`);
-    const outputFile1 = path.join(directoryPath1, videoName + '.mp4');
+    const outputFile1 = path.join(directoryPath1, videoName + '_webcam.mp4');
 
     // combineAllMP4Files(directoryPath1, outputFile1)
 
