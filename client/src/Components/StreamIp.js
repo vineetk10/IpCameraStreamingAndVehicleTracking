@@ -71,7 +71,7 @@ const StreamCameras = () => {
         const formData = new FormData();
 
         var fileName = user.id + '_' + user.name + '_' + startDate + '_' + Date.now()  + '_webcam.webm' ;
-        
+        startDate=Date.now()
         formData.append('file', blob, fileName);
         xhr.open('POST', BACKEND_SERVER_URL + `/${apiName}`, true);
         xhr.onreadystatechange = function() {

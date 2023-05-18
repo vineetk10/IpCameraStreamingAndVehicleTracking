@@ -56,8 +56,8 @@ const Video = ({isStart, onStart, onStop, email, stream, muted }) => {
 			<UserLabel>{email}</UserLabel>
 			{onStart && onStop &&
 			<VideoButtonsDiv>
-				<VideoButtons disabled={isStart} onClick={onStart}>Start Stream</VideoButtons>
-				<VideoButtons disabled={!isStart} onClick={onStop}>Stop Stream</VideoButtons>
+				<VideoButtons disabled={isStart} onClick={onStart}>Start</VideoButtons>
+				<VideoButtons disabled={!isStart} onClick={onStop}>Stop</VideoButtons>
 			</VideoButtonsDiv>
 	}
 	  </Container>
