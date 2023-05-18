@@ -127,7 +127,7 @@ app.post('/uploadChunks', upload1.single('file'), function(req, res) {
     const chunkTime = individualDetails[3];
 
     const directoryPath = path.join(baseDirectory, `${userid}_${camera}_${startTime}`);
-    const outputFile = `./chunks/${userid}_${camera}_${startTime}/` + chunkTime  + ".mp4"
+    const outputFile = `./chunks/${userid}_${camera}_${startTime}/` + chunkTime  + ".webm"
 
     // Check if directory exists, create it if it doesn't
     if (!fs.existsSync(directoryPath)) {
@@ -181,7 +181,7 @@ app.post('/stopChunks', upload1.single('file'), function(req, res) {
     const chunkTime = individualDetails[3];
 
     const directoryPath = path.join(baseDirectory, `${userid}_${camera}_${startTime}`);
-    const outputFile = `./chunks/${userid}_${camera}_${startTime}/` + chunkTime  + ".mp4"
+    const outputFile = `./chunks/${userid}_${camera}_${startTime}/` + chunkTime  + ".webm"
     // const directoryPath1 = `./chunks/${userid}_${camera}_${startTime}/`
 
     // const outputFile1 = `./chunks/${userid}_${camera}_${startTime}/` + 'combine.mp4'
@@ -213,7 +213,11 @@ app.post('/stopChunks', upload1.single('file'), function(req, res) {
           } else {
               console.log('Input file deleted successfully');
           }})
-      combineAllMP4Files(directoryPath1, outputFile1)
+
+          setTimeout(() => {
+            combineAllMP4Files(directoryPath1, outputFile1)
+          }, 5000)
+      // combineAllMP4Files(directoryPath1, outputFile1)
       res.status(200).send('Video uploaded and converted successfully');
     })
     .run();
@@ -233,8 +237,10 @@ app.post('/stopChunks', upload1.single('file'), function(req, res) {
 
 
 function combineAllMP4Files(directoryPath, outputFilePath) {
+
+
   const inputFiles = fs.readdirSync(directoryPath)
-  .filter(file => path.extname(file) === '.mp4')
+  .filter(file => path.extname(file) === '.webm')
   .map(file => path.join(directoryPath, file));
 
   const ffmpegCommand = ffmpeg({ source: inputFiles[0] });
@@ -304,6 +310,8 @@ function combineAllMP4FilesStartUp(directoryPath) {
   console.log('Output filePath:', outputFilePath)
 
   ffmpegCommand
+  .outputOptions('-c:v', 'copy') // Copy the video codec
+  .outputOptions('-c:a', 'copy') // Copy the audio codec
     .on('end', () => {
       console.log("Merge is complete")
       // Move the file to the upload folder
@@ -320,11 +328,12 @@ function combineAllMP4FilesStartUp(directoryPath) {
 }
 
 
+
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`)
     // Call the checkForNewVideos function when the Node.js application starts up
    // checkForNewVideos();
-   checkRemainingVideos();
+  //  checkRemainingVideos();
 })
 
 
