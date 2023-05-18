@@ -27,6 +27,7 @@ const StreamCameras = () => {
   const [users, setUsers] = useState([]);
   const [localStream, setLocalStream] = useState();
   const [recorder, setRecorder] = useState(null);
+  const [isStart, setIsStart] = useState(false);
 
   const getLocalStream = useCallback(async () => {
     try {
@@ -41,7 +42,7 @@ const StreamCameras = () => {
       let chunks = [];
      
       // let totalSize = 0;
-      const CHUNK_SIZE = 30;  // each chunk is of 50 KBs, so each file would be aroung 400-500 KBs and contain 10 second video, we can change it to have 30 mins videos
+      const CHUNK_SIZE = 300;  // each chunk is of 50 KBs, so each file would be aroung 400-500 KBs and contain 10 second video, we can change it to have 30 mins videos
       const mediaRecorderOptions = {
         mimeType: 'video/webm;codecs=h264',
         timeslice: 50000 // 50 KB
@@ -58,7 +59,7 @@ const StreamCameras = () => {
         
         if (chunks.length >= CHUNK_SIZE) {
           console.log("Inside ondataavailable")
-          saveData('uploadChunks');
+          saveData('upload');
         }
       };
 
@@ -82,7 +83,7 @@ const StreamCameras = () => {
       }
 
       recorder.onstop = () => {
-        saveData('stopChunks');
+        saveData('upload');
       };
       
       localStreamRef.current = localStream;
@@ -101,6 +102,7 @@ const StreamCameras = () => {
 
   const startRecording = () => {
     console.log('Recording started')
+    setIsStart(true);
     if (recorder) {
       recorder.start(1000);
     }
@@ -109,6 +111,7 @@ const StreamCameras = () => {
   
   const stopRecording = () => {
     console.log('Recording stopped')
+    setIsStart(false);
     if (recorder && recorder.state === 'recording') {
       recorder.stop();
     }
@@ -277,7 +280,7 @@ const StreamCameras = () => {
         // <div style={{marginLeft:'2rem'}} key={index} className="col-4 mb-4">
         <Video key={index} email={user.name} stream={user.stream} muted={true}/>
       ))}
-      <Video onStart={startRecording} onStop={stopRecording}  email={user.name} stream={localStream} ref={localVideoRef} muted={true}/>
+      <Video isStart={isStart} onStart={startRecording} onStop={stopRecording}  email={user.name} stream={localStream} ref={localVideoRef} muted={true}/>
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ const VideoButtons = styled.button`
 // 	muted?: boolean;
 // }
 
-const Video = ({onStart, onStop, email, stream, muted }) => {
+const Video = ({isStart, onStart, onStop, email, stream, muted }) => {
 	const ref = useRef(null);
 	const [isMuted, setIsMuted] = useState(false);
 
@@ -56,8 +56,8 @@ const Video = ({onStart, onStop, email, stream, muted }) => {
 			<UserLabel>{email}</UserLabel>
 			{onStart && onStop &&
 			<VideoButtonsDiv>
-				<VideoButtons onClick={onStart}>Start Stream</VideoButtons>
-				<VideoButtons onClick={onStop}>Stop Stream</VideoButtons>
+				<VideoButtons disabled={isStart} onClick={onStart}>Start Stream</VideoButtons>
+				<VideoButtons disabled={!isStart} onClick={onStop}>Stop Stream</VideoButtons>
 			</VideoButtonsDiv>
 	}
 	  </Container>
