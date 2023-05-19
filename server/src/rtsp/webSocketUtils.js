@@ -227,7 +227,7 @@ function restartStream(req, userId){
 pollSQSMessages();
 
 // Schedule receiveMessages to run every 5 minutes (300000 ms)
-setInterval(pollSQSMessages, 5*60*1000);
+setInterval(pollSQSMessages, 2*60*1000);
 
 
 module.exports = { startStream, stopStream, checkPortInUse, checkPortInUseHasSameCameraName, restartStream };

@@ -47,6 +47,15 @@ exports.registerUser = ( req, res ) => {
                 videoType: "webcam"
             },
             {
+                cameraName: "testingEmotion3",
+                name: "645c3ee9730f4ea1507e9441_John_1683771649937_1683771680541_webcam",
+                startDate:startTimeISO,
+                endDate:endTimeISOVideo2,
+                duration: 30,
+                s3URI: "s3://295b/645c3ee9730f4ea1507e9441_John_1683771649937_1683771680541_webcam.mp4",
+                videoType: "webcam"
+            },
+            {
                 cameraName: "testingVehicle1",
                 name: "63e08cd02e597b0ed6ce32be_NewIpvideo3_1683423707551_1683424373237",
                 startDate:startTimeISO,
@@ -95,6 +104,16 @@ exports.registerUser = ( req, res ) => {
                 query_type: "license",
                 finished_timestamp: endTimeISOVideo3,
                 output_url: "https://295b.s3.us-west-1.amazonaws.com/acb9a2be-a4c1-4a9a-88b7-67481f1fc1a2.avi?response-content-type=video%2Fmp4&AWSAccessKeyId=AKIAU6YG2LF3GP2ZY4QP&Signature=Vdh%2FSbCYzNQ%2Fu0BGom6urgh4gEQ%3D&Expires=1683590178"
+            },
+            {
+                message_id: "1a6ddab6-3901-4f65-a18f-6b5b77183c03",
+                input_key: "63e08cd02e597b0ed6ce32be_NewIpvideo4_1683423707551_1683424373237.mp4",
+                input_url: "s3://295b/63e08cd02e597b0ed6ce32be_NewIpvideo4_1683423707551_1683424373237.mp4",
+                status: "finished",
+                received_timestamp: startTimeISO,
+                query_type: "license",
+                finished_timestamp: endTimeISOVideo3,
+                output_url: "https://295b.s3.us-west-1.amazonaws.com/1a6ddab6-3901-4f65-a18f-6b5b77183c03.avi?response-content-type=video%2Fmp4&AWSAccessKeyId=AKIAU6YG2LF3GP2ZY4QP&Signature=6%2B%2FCssDxxVSTL1XE4etY6TICVl0%3D&Expires=1683776735"
             }
         ]
     }
